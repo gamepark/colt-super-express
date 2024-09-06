@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
-import { PlayerColor } from '@gamepark/colt-super-express/PlayerColor'
+import { Character } from '@gamepark/colt-super-express/Character'
 import { PlayerPanel, usePlayers } from '@gamepark/react-game'
 import { FC } from 'react'
 import { createPortal } from 'react-dom'
@@ -29,9 +29,12 @@ const panelPosition = (index: number) => css`
   height: 14em;
 `
 
-export const playerColorCode: Record<PlayerColor, string> = {
-  [PlayerColor.Red]: 'red',
-  [PlayerColor.Blue]: 'blue',
-  [PlayerColor.Green]: 'green',
-  [PlayerColor.Yellow]: 'yellow'
+export const playerColorCode: Record<Character, string> = {
+  [Character.Belle]: 'purple',
+  [Character.Cheyenne]: 'green',
+  [Character.Django]: 'black',
+  [Character.Doc]: 'blue',
+  [Character.Ghost]: 'beige',
+  [Character.Mei]: 'yellow',
+  [Character.Tuco]: 'red'
 }
