@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
-import { GameTemplateOptionsSpec } from '@gamepark/game-template/GameTemplateOptions'
-import { GameTemplateRules } from '@gamepark/game-template/GameTemplateRules'
-import { GameTemplateSetup } from '@gamepark/game-template/GameTemplateSetup'
+import { ColtSuperExpressOptionsSpec } from '@gamepark/colt-super-express/ColtSuperExpressOptions'
+import { ColtSuperExpressRules } from '@gamepark/colt-super-express/ColtSuperExpressRules'
+import { ColtSuperExpressSetup } from '@gamepark/colt-super-express/ColtSuperExpressSetup'
 import { GameProvider, MaterialGameAnimations, setupTranslation } from '@gamepark/react-game'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
@@ -14,7 +14,7 @@ setupTranslation(translations, { debug: false })
 
 ReactDOM.render(
   <StrictMode>
-    <GameProvider game="game-template" Rules={GameTemplateRules} optionsSpec={GameTemplateOptionsSpec} GameSetup={GameTemplateSetup}
+    <GameProvider game="colt-super-express" Rules={ColtSuperExpressRules} optionsSpec={ColtSuperExpressOptionsSpec} GameSetup={ColtSuperExpressSetup}
                   material={Material} locators={Locators} animations={new MaterialGameAnimations()}>
       <App/>
     </GameProvider>

@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
-import { PlayerColor } from '@gamepark/game-template/PlayerColor'
+import { PlayerColor } from '@gamepark/colt-super-express/PlayerColor'
 import { PlayerPanel, usePlayers } from '@gamepark/react-game'
 import { FC } from 'react'
 import { createPortal } from 'react-dom'
