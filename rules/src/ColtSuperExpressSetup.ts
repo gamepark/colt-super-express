@@ -13,6 +13,15 @@ export class ColtSuperExpressSetup extends MaterialGameSetup<Character, Material
   Rules = ColtSuperExpressRules
 
   setupMaterial(_options: ColtSuperExpressOptions) {
+    this.setupTrain()
+  }
+
+  setupTrain() {
+    this.material(MaterialType.TrainCard).createItem({
+      location: {
+        type: LocationType.TrainLine
+      }
+    })
   }
 
   start() {
