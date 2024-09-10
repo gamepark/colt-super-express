@@ -6,7 +6,7 @@ import { MaterialType } from "./material/MaterialType";
 import { Character } from "./Character";
 import { RuleId } from "./rules/RuleId";
 import { TrainCardType } from "./material/TrainCardType";
-import { ActionCardType } from "./material/ActionCardType";
+import {  actions } from "./material/Action";
 
 /**
  * This class creates a new Game based on the game options
@@ -43,44 +43,23 @@ export class ColtSuperExpressSetup extends MaterialGameSetup<
     }
   }
 
-  //mains carte action des joueurs
+
 
   setupPlayerCards() {
     for (let x = 1; x <= this.game.players.length; x++) {
-      const Player = this.game.players[x-1];
-      
-      this.material(MaterialType.ActionCard).createItems([
-        {
-          id: Player * 10 + ActionCardType.ChangeFloor,
-          location: {
-            type: LocationType.PlayerHand,
+      const player = this.game.players[x - 1];
+
+      this.material(MaterialType.ActionCard).createItems(
+        actions.map((action) => ({
+          id: {
+            front: player * 10 + action,
+            back: player
           },
-        },
-        {
-          id: Player * 10 + ActionCardType.Fire,
           location: {
-            type: LocationType.PlayerHand,
+            type: LocationType.PlayerHand,player
           },
-        },
-        {
-          id: Player * 10 + ActionCardType.Flip,
-          location: {
-            type: LocationType.PlayerHand,
-          },
-        },
-        {
-          id: Player * 10 + ActionCardType.BackImage,
-          location: {
-            type: LocationType.PlayerHand,
-          },
-        },
-        {
-          id: Player * 10 + ActionCardType.Move,
-          location: {
-            type: LocationType.PlayerHand,
-          },
-        },
-      ]);
+        }))
+      );
     }
   }
 

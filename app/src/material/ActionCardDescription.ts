@@ -1,4 +1,4 @@
-import { CardDescription} from "@gamepark/react-game";
+import { CardDescription } from "@gamepark/react-game";
 import BelleBack from "../images/BelleBack.jpg";
 import BelleChangeFloor from "../images/BelleChangeFloor.jpg";
 import BelleFire from "../images/BelleFire.jpg";
@@ -34,7 +34,7 @@ import TucoChangeFloor from "../images/TucoChangeFloor.jpg";
 import TucoFire from "../images/TucoFire.jpg";
 import TucoFlip from "../images/TucoFlip.jpg";
 import TucoMove from "../images/TucoMove.jpg";
-import { ActionCardType } from "@gamepark/colt-super-express/material/ActionCardType";
+import { Action } from "@gamepark/colt-super-express/material/Action";
 import { Character } from "@gamepark/colt-super-express/Character";
 
 class ActionCardDescription extends CardDescription {
@@ -42,47 +42,45 @@ class ActionCardDescription extends CardDescription {
   height = 8;
 
   backImages = {
-[Character.Belle * 10 + ActionCardType.BackImage]: BelleBack,
-[Character.Cheyenne * 10 + ActionCardType.BackImage]: CheyenneBack,
-[Character.Doc * 10 + ActionCardType.BackImage]: DocBack,
-[Character.Django * 10 + ActionCardType.BackImage]: DjangoBack,
-[Character.Tuco * 10 + ActionCardType.BackImage]: TucoBack,
-[Character.Mei * 10 + ActionCardType.BackImage]: MeiBack,
-[Character.Ghost * 10 + ActionCardType.BackImage]: GhostBack,
-  }
-  ;
-
-  images = {
-    [Character.Belle * 10 + ActionCardType.ChangeFloor]: BelleChangeFloor,
-    [Character.Belle * 10 + ActionCardType.Flip]: BelleFlip,
-    [Character.Belle * 10 + ActionCardType.Fire]: BelleFire,
-    [Character.Belle * 10 + ActionCardType.Move]: BelleMove,
-    [Character.Cheyenne * 10 + ActionCardType.ChangeFloor]: CheyenneChangeFloor,
-    [Character.Cheyenne + ActionCardType.Flip]: CheyenneFlip,
-    [Character.Cheyenne  * 10+ ActionCardType.Fire]: CheyenneFire,
-    [Character.Cheyenne  * 10+ ActionCardType.Move]: CheyenneMove,
-    [Character.Doc * 10 + ActionCardType.ChangeFloor]: DocChangeFloor,
-    [Character.Doc * 10 + ActionCardType.Flip]: DocFlip,
-    [Character.Doc * 10 + ActionCardType.Fire]: DocFire,
-    [Character.Doc * 10 + ActionCardType.Move]: DocMove,
-    [Character.Django * 10 + ActionCardType.ChangeFloor]: DjangoChangeFloor,
-    [Character.Django * 10 + ActionCardType.Flip]: DjangoFlip,
-    [Character.Django * 10 + ActionCardType.Fire]: DjangoFire,
-    [Character.Django * 10 + ActionCardType.Move]: DjangoMove,
-    [Character.Ghost * 10 + ActionCardType.ChangeFloor]: GhostChangeFloor,
-    [Character.Ghost * 10 + ActionCardType.Flip]: GhostFlip,
-    [Character.Ghost * 10 + ActionCardType.Fire]: GhostFire,
-    [Character.Ghost * 10 + ActionCardType.Move]: GhostMove,
-    [Character.Mei * 10 + ActionCardType.ChangeFloor]: MeiChangeFloor,
-    [Character.Mei * 10 + ActionCardType.Flip]: MeiFlip,
-    [Character.Mei * 10 + ActionCardType.Fire]: MeiFire,
-    [Character.Mei * 10 + ActionCardType.Move]: MeiMove,
-    [Character.Tuco * 10 + ActionCardType.ChangeFloor]: TucoChangeFloor,
-    [Character.Tuco * 10 + ActionCardType.Flip]: TucoFlip,
-    [Character.Tuco * 10 + ActionCardType.Fire]: TucoFire,
-    [Character.Tuco  * 10+ ActionCardType.Move]: TucoMove
+    [Character.Belle]: BelleBack,
+    [Character.Cheyenne]: CheyenneBack,
+    [Character.Doc]: DocBack,
+    [Character.Django]: DjangoBack,
+    [Character.Tuco]: TucoBack,
+    [Character.Mei]: MeiBack,
+    [Character.Ghost]: GhostBack,
   };
 
+  images = {
+    [Character.Belle * 10 + Action.ChangeFloor]: BelleChangeFloor,
+    [Character.Belle * 10 + Action.Flip]: BelleFlip,
+    [Character.Belle * 10 + Action.Fire]: BelleFire,
+    [Character.Belle * 10 + Action.Move]: BelleMove,
+    [Character.Cheyenne * 10 + Action.ChangeFloor]: CheyenneChangeFloor,
+    [Character.Cheyenne + Action.Flip]: CheyenneFlip,
+    [Character.Cheyenne * 10 + Action.Fire]: CheyenneFire,
+    [Character.Cheyenne * 10 + Action.Move]: CheyenneMove,
+    [Character.Doc * 10 + Action.ChangeFloor]: DocChangeFloor,
+    [Character.Doc * 10 + Action.Flip]: DocFlip,
+    [Character.Doc * 10 + Action.Fire]: DocFire,
+    [Character.Doc * 10 + Action.Move]: DocMove,
+    [Character.Django * 10 + Action.ChangeFloor]: DjangoChangeFloor,
+    [Character.Django * 10 + Action.Flip]: DjangoFlip,
+    [Character.Django * 10 + Action.Fire]: DjangoFire,
+    [Character.Django * 10 + Action.Move]: DjangoMove,
+    [Character.Ghost * 10 + Action.ChangeFloor]: GhostChangeFloor,
+    [Character.Ghost * 10 + Action.Flip]: GhostFlip,
+    [Character.Ghost * 10 + Action.Fire]: GhostFire,
+    [Character.Ghost * 10 + Action.Move]: GhostMove,
+    [Character.Mei * 10 + Action.ChangeFloor]: MeiChangeFloor,
+    [Character.Mei * 10 + Action.Flip]: MeiFlip,
+    [Character.Mei * 10 + Action.Fire]: MeiFire,
+    [Character.Mei * 10 + Action.Move]: MeiMove,
+    [Character.Tuco * 10 + Action.ChangeFloor]: TucoChangeFloor,
+    [Character.Tuco * 10 + Action.Flip]: TucoFlip,
+    [Character.Tuco * 10 + Action.Fire]: TucoFire,
+    [Character.Tuco * 10 + Action.Move]: TucoMove,
+  };
 }
 
 export const actionCardDescription = new ActionCardDescription();
