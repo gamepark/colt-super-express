@@ -1,6 +1,14 @@
 {
   "en": {
     "translation": {
+      "Name": "Colt Super Express",
+      "Belle": "Belle",
+      "Cheyenne": "Cheyenne",
+      "Django": "Django",
+      "Doc": "Doc",
+      "Ghost": "Ghost",
+      "Mei": "Mei",
+      "Tuco": "Tuco",
       "Menu": "Menu",
       "OK": "OK",
       "Validate": "Validate",
@@ -115,6 +123,14 @@
   },
   "fr": {
     "translation": {
+      "Name": "Colt Super Express",
+      "Belle": "Belle",
+      "Cheyenne": "Cheyenne",
+      "Django": "Django",
+      "Doc": "Doc",
+      "Ghost": "Ghost",
+      "Mei": "Mei",
+      "Tuco": "Tuco",
       "Menu": "Menu",
       "OK": "OK",
       "Validate": "Valider",

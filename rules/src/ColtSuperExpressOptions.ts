@@ -22,7 +22,7 @@ export type ColtSuperExpressOptions = {
 export const ColtSuperExpressOptionsSpec: OptionsSpec<ColtSuperExpressOptions> = {
   players: {
     id: {
-      label: (t: TFunction) => t('Player color'),
+      label: (t: TFunction) => t('Character'),
       values: characters,
       valueSpec: color => ({ label: t => getPlayerName(color, t) })
     }
@@ -31,10 +31,10 @@ export const ColtSuperExpressOptionsSpec: OptionsSpec<ColtSuperExpressOptions> =
 
 export function getPlayerName(playerId: Character, t: TFunction) {
   switch (playerId) {
-    case Character.Cheyenne:
-      return t('Cheyenne')
     case Character.Belle:
       return t('Belle')
+    case Character.Cheyenne:
+      return t('Cheyenne')
     case Character.Django:
       return t('Django')
     case Character.Doc:
