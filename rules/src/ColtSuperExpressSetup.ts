@@ -22,6 +22,7 @@ export class ColtSuperExpressSetup extends MaterialGameSetup<
   setupMaterial(_options: ColtSuperExpressOptions) {
     this.setupTrain();
     this.setupPlayerCards();
+    this.setupBanditsFigure()
   }
 
   setupTrain() {
@@ -61,6 +62,10 @@ export class ColtSuperExpressSetup extends MaterialGameSetup<
         }))
       );
     }
+  }
+
+  setupBanditsFigure() {
+
   }
 
   start() {
