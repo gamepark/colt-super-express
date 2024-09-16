@@ -6,7 +6,7 @@ import { MaterialType } from "./material/MaterialType";
 import { Character } from "./Character";
 import { RuleId } from "./rules/RuleId";
 import { TrainCardType } from "./material/TrainCardType";
-import {  actions } from "./material/Action";
+import { actions } from "./material/Action";
 
 /**
  * This class creates a new Game based on the game options
@@ -22,7 +22,8 @@ export class ColtSuperExpressSetup extends MaterialGameSetup<
   setupMaterial(_options: ColtSuperExpressOptions) {
     this.setupTrain();
     this.setupPlayerCards();
-    this.setupBanditsFigure()
+    this.setupBanditsFigure();
+    this.setupFirstPlayerCard()
   }
 
   setupTrain() {
@@ -44,8 +45,6 @@ export class ColtSuperExpressSetup extends MaterialGameSetup<
     }
   }
 
-
-
   setupPlayerCards() {
     for (let x = 1; x <= this.game.players.length; x++) {
       const player = this.game.players[x - 1];
@@ -54,10 +53,11 @@ export class ColtSuperExpressSetup extends MaterialGameSetup<
         actions.map((action) => ({
           id: {
             front: player * 10 + action,
-            back: player
+            back: player,
           },
           location: {
-            type: LocationType.PlayerHand,player
+            type: LocationType.PlayerHand,
+            player,
           },
         }))
       );
@@ -65,7 +65,25 @@ export class ColtSuperExpressSetup extends MaterialGameSetup<
   }
 
   setupBanditsFigure() {
+    for (let x = 1; x <= this.game.players.length; x++) {
+      const player = this.game.players[x - 1];
 
+      this.material(MaterialType.BanditFigure).createItem({
+        id: player,
+        location: {
+          type: LocationType.InTrainBanditZone
+        },
+      });
+    }
+  }
+
+  setupFirstPlayerCard(){
+    this.material(MaterialType.FirstPlayerCard).createItem({
+      id: MaterialType.FirstPlayerCard,
+      location: {
+        type: LocationType.FirstPlayerCardZone
+      },
+    });
   }
 
   start() {
