@@ -23,7 +23,7 @@ export class ColtSuperExpressSetup extends MaterialGameSetup<
     this.setupTrain();
     this.setupPlayerCards();
     this.setupBanditsFigure();
-    this.setupFirstPlayerCard()
+    this.setupFirstPlayerCard();
   }
 
   setupTrain() {
@@ -71,17 +71,21 @@ export class ColtSuperExpressSetup extends MaterialGameSetup<
       this.material(MaterialType.BanditFigure).createItem({
         id: player,
         location: {
-          type: LocationType.InTrainBanditZone
+          type: LocationType.InTrainBanditZone,
         },
       });
     }
   }
 
-  setupFirstPlayerCard(){
+  setupFirstPlayerCard() {
+    const players = this.game.players;
+    const randomPlayerIndex = Math.floor(Math.random() * players.length);
+    const firstPlayer = players[randomPlayerIndex];
+
     this.material(MaterialType.FirstPlayerCard).createItem({
-      id: MaterialType.FirstPlayerCard,
+      id: firstPlayer,
       location: {
-        type: LocationType.FirstPlayerCardZone
+        type: LocationType.FirstPlayerCardZone,
       },
     });
   }

@@ -2,9 +2,8 @@ import { Locator, MaterialContext } from "@gamepark/react-game";
 import { Location } from "@gamepark/rules-api";
 
 class BanditFigureLocator extends Locator {
-  getCoordinates(location: Location, context:MaterialContext) {
-      console.log(context.material);
-      console.log(location);
+  getCoordinates(_location: Location, _context:MaterialContext) {
+
       return {
           y:6
       }

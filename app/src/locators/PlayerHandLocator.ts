@@ -8,7 +8,7 @@ import { Location } from "@gamepark/rules-api";
 class PlayerHandLocator extends HandLocator {
   getCoordinates(location: Location, context: MaterialContext) {
     const playerIndex = getRelativePlayerIndex(context, location.player);
-    const players = context.rules.players.length;     
+    const players = context.rules.players.length;      
 
     switch (players) {
       case 2:

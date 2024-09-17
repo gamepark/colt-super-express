@@ -11,5 +11,5 @@ export const Locators: Partial<Record<LocationType, Locator<Character, MaterialT
     [LocationType.TrainLine]: trainLineLocator,
     [LocationType.PlayerHand]: playerHandLocator,
     [LocationType.InTrainBanditZone]: banditFigureLocator,
-    [LocationType.FirstPlayerCardZone]: firstPlayerLocator
+    [LocationType.FirstPlayerCardZone]: firstPlayerLocator,
 }
