@@ -57,7 +57,7 @@ class ActionCardDescription extends CardDescription {
     [Character.Belle * 10 + Action.Fire]: BelleFire,
     [Character.Belle * 10 + Action.Move]: BelleMove,
     [Character.Cheyenne * 10 + Action.ChangeFloor]: CheyenneChangeFloor,
-    [Character.Cheyenne + Action.Flip]: CheyenneFlip,
+    [Character.Cheyenne * 10 + Action.Flip]: CheyenneFlip,
     [Character.Cheyenne * 10 + Action.Fire]: CheyenneFire,
     [Character.Cheyenne * 10 + Action.Move]: CheyenneMove,
     [Character.Doc * 10 + Action.ChangeFloor]: DocChangeFloor,
