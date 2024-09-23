@@ -1,4 +1,4 @@
-import {  hideFrontToOthers,  MaterialGame,  MaterialMove,  PositiveSequenceStrategy,  SecretMaterialRules, TimeLimit } from '@gamepark/rules-api'
+import {  hideFrontToOthers,   hideItemId,   MaterialGame,  MaterialMove,  PositiveSequenceStrategy,  SecretMaterialRules, TimeLimit } from '@gamepark/rules-api'
 import { LocationType } from './material/LocationType'
 import { MaterialType } from './material/MaterialType'
 import { Character } from './Character'
@@ -19,6 +19,9 @@ export class ColtSuperExpressRules extends SecretMaterialRules<Character, Materi
   hidingStrategies = {
     [MaterialType.ActionCard]: {
       [LocationType.PlayerHand]: hideFrontToOthers
+    },
+    [MaterialType.TrainCard]: {
+     [LocationType.TrainLine]: hideItemId
     }
   }
 

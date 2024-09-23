@@ -5,8 +5,8 @@ import { LocationType } from "./material/LocationType";
 import { MaterialType } from "./material/MaterialType";
 import { Character } from "./Character";
 import { RuleId } from "./rules/RuleId";
-import { TrainCardType } from "./material/TrainCardType";
 import { actions } from "./material/Action";
+import { shuffle } from "lodash";
 
 /**
  * This class creates a new Game based on the game options
@@ -27,16 +27,11 @@ export class ColtSuperExpressSetup extends MaterialGameSetup<
   }
 
   setupTrain() {
-    this.material(MaterialType.TrainCard).createItem({
-      id: TrainCardType.Locomotive,
-      location: {
-        type: LocationType.TrainLine,
-        x: 0,
-      },
-    });
+    const cars = shuffle([301, 312, 323, 345, 356, 367, 378, 389])
+    
     for (let x = 1; x <= this.game.players.length + 1; x++) {
       this.material(MaterialType.TrainCard).createItem({
-        id: TrainCardType.Car,
+        id: cars.pop(),
         location: {
           type: LocationType.TrainLine,
           x,
