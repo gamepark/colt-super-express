@@ -63,15 +63,22 @@ export class ColtSuperExpressSetup extends MaterialGameSetup<
       );
     }
   }
-
+  
   setupBanditsFigure() {
-    for (let x = 1; x <= this.game.players.length; x++) {
-      const player = this.game.players[x - 1];
+    for (let i = 0; i < this.game.players.length; i++) {
+      const player = this.game.players[i];
 
       this.material(MaterialType.BanditFigure).createItem({
         id: player,
         location: {
           type: LocationType.InTrainBanditZone,
+          parent: this.material(MaterialType.TrainCard)
+            .location((l) => l.x === this.game.players.length - i)
+            .getIndex(),
+          rotation: {
+            stunned: false,
+            facingLocomotive: !(i >= this.game.players.length/2),
+          },
         },
       });
     }
