@@ -10,29 +10,38 @@ import { RuleId } from './rules/RuleId'
  * This class implements the rules of the board game.
  * It must follow Game Park "Rules" API so that the Game Park server can enforce the rules.
  */
-export class ColtSuperExpressRules extends SecretMaterialRules<Character, MaterialType, LocationType>
-  implements TimeLimit<MaterialGame<Character, MaterialType, LocationType>, MaterialMove<Character, MaterialType, LocationType>, Character> {
+export class ColtSuperExpressRules
+  extends SecretMaterialRules<Character, MaterialType, LocationType>
+  implements
+    TimeLimit<
+      MaterialGame<Character, MaterialType, LocationType>,
+      MaterialMove<Character, MaterialType, LocationType>,
+      Character
+    >
+{
   rules = {
-    [RuleId.Scheming]: SchemingRule
-  }
+    [RuleId.Scheming]: SchemingRule,
+  };
 
   hidingStrategies = {
     [MaterialType.ActionCard]: {
-      [LocationType.PlayerHand]: hideFrontToOthers
+      [LocationType.PlayerHand]: hideFrontToOthers,
+      [LocationType.ActionZone]: hideFrontToOthers,
     },
     [MaterialType.TrainCard]: {
-     [LocationType.TrainLine]: hideItemId
+      [LocationType.TrainLine]: hideItemId,
+      
     }
-
-  }
+  };
 
   locationsStrategies = {
     [MaterialType.ActionCard]: {
-      [LocationType.PlayerHand]: new PositiveSequenceStrategy()
-    }
-  }
+      [LocationType.PlayerHand]: new PositiveSequenceStrategy(),
+      [LocationType.ActionZone]: new PositiveSequenceStrategy()
+    },
+  };
 
   giveTime(): number {
-    return 60
+    return 60;
   }
 }
