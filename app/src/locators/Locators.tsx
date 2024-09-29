@@ -6,10 +6,12 @@ import { trainLineLocator } from './TrainLineLocator'
 import { playerHandLocator } from './PlayerHandLocator'
 import { banditFigureLocator } from './InTrainBanditZoneLocator'
 import { firstPlayerLocator } from './FirstPlayerCardLocator'
+import { actionZoneLocator } from './ActionZoneLocator'
 
 export const Locators: Partial<Record<LocationType, Locator<Character, MaterialType, LocationType>>> = {
     [LocationType.TrainLine]: trainLineLocator,
     [LocationType.PlayerHand]: playerHandLocator,
     [LocationType.InTrainBanditZone]: banditFigureLocator,
     [LocationType.FirstPlayerCardZone]: firstPlayerLocator,
+    [LocationType.ActionZone]: actionZoneLocator
 }

@@ -1,3 +1,4 @@
 export enum RuleId {
-  PlayerTurn = 1
+  Scheming = 1,
+  Shooting
 }

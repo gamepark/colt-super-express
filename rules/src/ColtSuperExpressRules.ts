@@ -2,7 +2,7 @@ import {  hideFrontToOthers,   hideItemId,   MaterialGame,  MaterialMove,  Posit
 import { LocationType } from './material/LocationType'
 import { MaterialType } from './material/MaterialType'
 import { Character } from './Character'
-import { PlayerTurn } from './rules/PlayerTurn'
+import { SchemingRule } from './rules/SchemingRule'
 import { RuleId } from './rules/RuleId'
 
 
@@ -13,7 +13,7 @@ import { RuleId } from './rules/RuleId'
 export class ColtSuperExpressRules extends SecretMaterialRules<Character, MaterialType, LocationType>
   implements TimeLimit<MaterialGame<Character, MaterialType, LocationType>, MaterialMove<Character, MaterialType, LocationType>, Character> {
   rules = {
-    [RuleId.PlayerTurn]: PlayerTurn
+    [RuleId.Scheming]: SchemingRule
   }
 
   hidingStrategies = {
@@ -23,6 +23,7 @@ export class ColtSuperExpressRules extends SecretMaterialRules<Character, Materi
     [MaterialType.TrainCard]: {
      [LocationType.TrainLine]: hideItemId
     }
+
   }
 
   locationsStrategies = {

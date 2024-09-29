@@ -90,6 +90,6 @@ export class ColtSuperExpressSetup extends MaterialGameSetup<
   }
 
   start() {
-    this.startPlayerTurn(RuleId.PlayerTurn, this.game.players[0]);
+    this.startSimultaneousRule(RuleId.Scheming);
   }
 }
