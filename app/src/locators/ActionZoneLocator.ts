@@ -1,12 +1,12 @@
 import {
+  DeckLocator,
   getRelativePlayerIndex,
-  ListLocator,
   MaterialContext,
 } from "@gamepark/react-game";
 import { Location } from "@gamepark/rules-api";
 
-class ActionZoneLocator extends ListLocator {
-  getLocationCoordinates(location: Location, context: MaterialContext) {
+class ActionZoneLocator extends DeckLocator {
+  getCoordinates(location: Location, context: MaterialContext) {
     const playerIndex = getRelativePlayerIndex(context, location.player);
     const players = context.rules.players.length;
 
