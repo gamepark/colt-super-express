@@ -42,6 +42,9 @@ export class ColtSuperExpressRules
       [LocationType.PlayerHand]: new PositiveSequenceStrategy(),
       [LocationType.ActionZone]: new PositiveSequenceStrategy()
     },
+    [MaterialType.BanditFigure]: {
+      [LocationType.InTrainBanditZone]: new PositiveSequenceStrategy()
+    },
   };
 
   giveTime(): number {
