@@ -4,5 +4,6 @@ export enum LocationType {
     PlayerHand,
     ActionZone,
     FirstPlayerCardZone,
-    LootZone
+    LootZone,
+    ShootingZone
 }

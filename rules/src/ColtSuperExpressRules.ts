@@ -4,6 +4,8 @@ import { MaterialType } from './material/MaterialType'
 import { Character } from './Character'
 import { SchemingRule } from './rules/SchemingRule'
 import { RuleId } from './rules/RuleId'
+import { ShootingRule } from './rules/ShootingRule'
+
 
 
 /**
@@ -21,6 +23,7 @@ export class ColtSuperExpressRules
 {
   rules = {
     [RuleId.Scheming]: SchemingRule,
+    [RuleId.Shooting]: ShootingRule
   };
 
   hidingStrategies = {

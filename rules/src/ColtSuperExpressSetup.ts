@@ -82,9 +82,9 @@ export class ColtSuperExpressSetup extends MaterialGameSetup<
   setupFirstPlayerCard() {
 
     this.material(MaterialType.FirstPlayerCard).createItem({
-      id: this.game.players[0],
       location: {
         type: LocationType.FirstPlayerCardZone,
+        player: this.players[0]
       },
     });
   }
