@@ -34,7 +34,6 @@ import TucoChangeFloor from "../images/TucoChangeFloor.jpg";
 import TucoFire from "../images/TucoFire.jpg";
 import TucoFlip from "../images/TucoFlip.jpg";
 import TucoMove from "../images/TucoMove.jpg";
-import { Action } from "@gamepark/colt-super-express/material/Action";
 import { Character } from "@gamepark/colt-super-express/Character";
 import { ActionCard } from "@gamepark/colt-super-express/material/ActionCard";
 

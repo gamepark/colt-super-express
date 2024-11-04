@@ -27,8 +27,8 @@ export class ColtSuperExpressSetup extends MaterialGameSetup<
   }
 
   setupTrain() {
-    const cars = shuffle([301, 312, 323, 345, 356, 367, 378, 389])
-    
+    const cars = shuffle([301, 312, 323, 345, 356, 367, 378, 389]);
+
     for (let x = 1; x <= this.game.players.length + 1; x++) {
       this.material(MaterialType.TrainCard).createItem({
         id: cars.pop(),
@@ -58,7 +58,7 @@ export class ColtSuperExpressSetup extends MaterialGameSetup<
       );
     }
   }
-  
+
   setupBanditsFigure() {
     for (let i = 0; i < this.game.players.length; i++) {
       const player = this.game.players[i];
@@ -72,19 +72,19 @@ export class ColtSuperExpressSetup extends MaterialGameSetup<
             .getIndex(),
           rotation: {
             stunned: false,
-            facingLocomotive: !(i >= this.game.players.length/2),
-          },
+            facingLocomotive: !(i >= this.game.players.length / 2),
+            isOnTop: false,
+          }
         },
       });
     }
   }
 
   setupFirstPlayerCard() {
-
     this.material(MaterialType.FirstPlayerCard).createItem({
       location: {
         type: LocationType.FirstPlayerCardZone,
-        player: this.players[0]
+        player: this.players[0],
       },
     });
   }

@@ -56,13 +56,39 @@ export class ShootingRule extends PlayerTurnRule {
     ];
   }
 
-  applyActionEffect(action: Action) {
-    console.log(action);
+  flipAction() {
+    const banditFigure = this.banditFigure;
+    const banditLocation = banditFigure.getItem()!.location;
+    const trainCardX = this.material(MaterialType.TrainCard).getItem(
+      banditLocation.parent!
+    ).location.x!;
+    const trainCard = this.material(MaterialType.TrainCard)
+      .location(LocationType.TrainLine)
+      .location((location) => location.x === trainCardX);
 
+    return [
+      banditFigure.moveItem({
+        type: LocationType.InTrainBanditZone,
+        parent: trainCard.getIndex(),
+        rotation: {
+          facingLocomotive: !banditLocation.rotation.facingLocomotive,
+        },
+      }),
+    ];
+  }
+
+  changeFloorAction() {
+    return [];
+  }
+
+  applyActionEffect(action: Action) {
     switch (action) {
       case Action.Move:
         return this.moveAction();
-
+      case Action.Flip:
+        return this.flipAction();
+      case Action.ChangeFloor:
+        return this.changeFloorAction();
       default:
         break;
     }
