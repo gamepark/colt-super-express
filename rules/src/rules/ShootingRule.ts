@@ -78,6 +78,11 @@ export class ShootingRule extends PlayerTurnRule {
   }
 
   changeFloorAction() {
+    const banditFigure = this.banditFigure;
+    const banditLocationId = banditFigure.getItem()?.location.id;
+    const banditLocationNewId = banditLocationId === 1 ? 2 : 1;
+    console.log(banditLocationNewId);
+
     return [];
   }
 
