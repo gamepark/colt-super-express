@@ -45,9 +45,11 @@ export class ShootingRule extends PlayerTurnRule {
     const nextTrainCard = this.material(MaterialType.TrainCard)
       .location(LocationType.TrainLine)
       .location((location) => location.x === nextTrainCardX);
+    const banditLocationId = banditFigure.getItem()?.location.id;
 
     return [
       banditFigure.moveItem({
+        id: banditLocationId,
         type: LocationType.InTrainBanditZone,
         parent: nextTrainCard.getIndex(),
         rotation: banditLocation.rotation,
@@ -65,9 +67,11 @@ export class ShootingRule extends PlayerTurnRule {
     const trainCard = this.material(MaterialType.TrainCard)
       .location(LocationType.TrainLine)
       .location((location) => location.x === trainCardX);
+    const banditLocationId = banditFigure.getItem()?.location.id;
 
     return [
       banditFigure.moveItem({
+        id: banditLocationId,
         type: LocationType.InTrainBanditZone,
         parent: trainCard.getIndex(),
         rotation: {
@@ -79,11 +83,24 @@ export class ShootingRule extends PlayerTurnRule {
 
   changeFloorAction() {
     const banditFigure = this.banditFigure;
+    const banditLocation = banditFigure.getItem()!.location;
     const banditLocationId = banditFigure.getItem()?.location.id;
     const banditLocationNewId = banditLocationId === 1 ? 2 : 1;
-    console.log(banditLocationNewId);
+    const trainCardX = this.material(MaterialType.TrainCard).getItem(
+      banditLocation.parent!
+    ).location.x!;
+    const trainCard = this.material(MaterialType.TrainCard)
+      .location(LocationType.TrainLine)
+      .location((location) => location.x === trainCardX);
 
-    return [];
+    return [
+      banditFigure.moveItem({
+        id: banditLocationNewId,
+        type: LocationType.InTrainBanditZone,
+        parent: trainCard.getIndex(),
+        rotation: banditLocation.rotation,
+      }),
+    ];
   }
 
   applyActionEffect(action: Action) {
