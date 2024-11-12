@@ -7,7 +7,7 @@ import { Character } from "./Character";
 import { RuleId } from "./rules/RuleId";
 import { actions } from "./material/Action";
 import { shuffle } from "lodash";
-import { ChangeFloorState } from "./material/ChangeFloorState";
+import { WagonFloor } from "./material/WagonFloor";
 
 /**
  * This class creates a new Game based on the game options
@@ -67,7 +67,7 @@ export class ColtSuperExpressSetup extends MaterialGameSetup<
       this.material(MaterialType.BanditFigure).createItem({
         id: player,
         location: {
-          id:ChangeFloorState.InsideTrainCar ,
+          id: WagonFloor.InsideTrainCar,
           type: LocationType.InTrainBanditZone,
           parent: this.material(MaterialType.TrainCard)
             .location((l) => l.x === this.game.players.length - i)

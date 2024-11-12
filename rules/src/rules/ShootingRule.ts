@@ -4,6 +4,7 @@ import { LocationType } from "../material/LocationType";
 import { ActionCardId, getAction } from "../material/ActionCard";
 import { RuleId } from "./RuleId";
 import { Action } from "../material/Action";
+import { WagonFloor } from "../material/WagonFloor";
 
 export class ShootingRule extends PlayerTurnRule {
   onRuleStart() {
@@ -60,46 +61,32 @@ export class ShootingRule extends PlayerTurnRule {
 
   flipAction() {
     const banditFigure = this.banditFigure;
-    const banditLocation = banditFigure.getItem()!.location;
-    const trainCardX = this.material(MaterialType.TrainCard).getItem(
-      banditLocation.parent!
-    ).location.x!;
-    const trainCard = this.material(MaterialType.TrainCard)
-      .location(LocationType.TrainLine)
-      .location((location) => location.x === trainCardX);
-    const banditLocationId = banditFigure.getItem()?.location.id;
 
     return [
-      banditFigure.moveItem({
-        id: banditLocationId,
-        type: LocationType.InTrainBanditZone,
-        parent: trainCard.getIndex(),
+      banditFigure.moveItem((item) => ({
+        ...item.location,
         rotation: {
-          facingLocomotive: !banditLocation.rotation.facingLocomotive,
+          stunned: false,
+          facingLocomotive: !item.location.rotation.facingLocomotive,
         },
-      }),
+      })),
     ];
   }
 
   changeFloorAction() {
     const banditFigure = this.banditFigure;
-    const banditLocation = banditFigure.getItem()!.location;
     const banditLocationId = banditFigure.getItem()?.location.id;
-    const banditLocationNewId = banditLocationId === 1 ? 2 : 1;
-    const trainCardX = this.material(MaterialType.TrainCard).getItem(
-      banditLocation.parent!
-    ).location.x!;
-    const trainCard = this.material(MaterialType.TrainCard)
-      .location(LocationType.TrainLine)
-      .location((location) => location.x === trainCardX);
+    const banditLocationNewId =
+      banditLocationId === WagonFloor.InsideTrainCar
+        ? WagonFloor.OntoTheroof
+        : WagonFloor.InsideTrainCar;
 
     return [
-      banditFigure.moveItem({
+      banditFigure.moveItem((item) => ({
+        ...item.location,
         id: banditLocationNewId,
-        type: LocationType.InTrainBanditZone,
-        parent: trainCard.getIndex(),
-        rotation: banditLocation.rotation,
-      }),
+        x: item.location.rotation.facingLocomotive ? undefined : 0,
+      })),
     ];
   }
 
@@ -107,10 +94,13 @@ export class ShootingRule extends PlayerTurnRule {
     switch (action) {
       case Action.Move:
         return this.moveAction();
+        break;
       case Action.Flip:
         return this.flipAction();
+        break;
       case Action.ChangeFloor:
         return this.changeFloorAction();
+        break;
       default:
         break;
     }
