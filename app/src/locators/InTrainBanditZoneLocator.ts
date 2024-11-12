@@ -17,6 +17,13 @@ class BanditFigureLocator extends ListLocator {
 
   gap = { x: -1.5 };
   maxCount = 4;
+  getRotateZ(location: Location) {
+    if (location.rotation.stunned) {
+      return location.rotation.facingLocomotive ? -90 : 90;
+    } else {
+      return 0;
+    }
+  }
 }
 
 export const banditFigureLocator = new BanditFigureLocator();
