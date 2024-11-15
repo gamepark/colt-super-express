@@ -6,7 +6,7 @@ import DocFigure from "../images/DocFigure.png";
 import MeiFigure from "../images/MeiFigure.png";
 import GhostFigure from "../images/GhostFigure.png";
 import TucoFigure from "../images/TucoFigure.png";
-import { Character } from "@gamepark/colt-super-express/Character";
+import { Bandit } from "@gamepark/colt-super-express/Bandit";
 import { MaterialItem } from "@gamepark/rules-api";
 import { css, Interpolation, Theme } from "@emotion/react";
 
@@ -14,13 +14,13 @@ class BanditFigureDescription extends TokenDescription {
   width = 2.6;
   height = 3.2;
   images = {
-    [Character.Belle]: BelleFigure,
-    [Character.Cheyenne]: CheyenneFigure,
-    [Character.Doc]: DocFigure,
-    [Character.Ghost]: GhostFigure,
-    [Character.Django]: DjangoFigure,
-    [Character.Mei]: MeiFigure,
-    [Character.Tuco]: TucoFigure,
+    [Bandit.Belle]: BelleFigure,
+    [Bandit.Cheyenne]: CheyenneFigure,
+    [Bandit.Doc]: DocFigure,
+    [Bandit.Ghost]: GhostFigure,
+    [Bandit.Django]: DjangoFigure,
+    [Bandit.Mei]: MeiFigure,
+    [Bandit.Tuco]: TucoFigure,
   };
 
   isFlipped(item: Partial<MaterialItem>) {

@@ -1,11 +1,11 @@
 import { OptionsSpec } from '@gamepark/rules-api'
 import { TFunction } from 'i18next'
-import { Character, characters } from './Character'
+import { Bandit, characters } from './Bandit'
 
 /**
  * This is the options for each player in the game.
  */
-type PlayerOptions = { id: Character }
+type PlayerOptions = { id: Bandit }
 
 /**
  * This is the type of object that the game receives when a new game is started.
@@ -22,28 +22,28 @@ export type ColtSuperExpressOptions = {
 export const ColtSuperExpressOptionsSpec: OptionsSpec<ColtSuperExpressOptions> = {
   players: {
     id: {
-      label: (t: TFunction) => t('Character'),
+      label: (t: TFunction) => t('Bandit'),
       values: characters,
       valueSpec: color => ({ label: t => getPlayerName(color, t) })
     }
   }
 }
 
-export function getPlayerName(playerId: Character, t: TFunction) {
+export function getPlayerName(playerId: Bandit, t: TFunction) {
   switch (playerId) {
-    case Character.Belle:
+    case Bandit.Belle:
       return t('Belle')
-    case Character.Cheyenne:
+    case Bandit.Cheyenne:
       return t('Cheyenne')
-    case Character.Django:
+    case Bandit.Django:
       return t('Django')
-    case Character.Doc:
+    case Bandit.Doc:
       return t('Doc')
-    case Character.Ghost:
+    case Bandit.Ghost:
       return t('Ghost')
-    case Character.Mei:
+    case Bandit.Mei:
       return t('Mei')
-    case Character.Tuco:
+    case Bandit.Tuco:
       return t('Tuco')
   }
 }

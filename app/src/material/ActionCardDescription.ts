@@ -34,7 +34,7 @@ import TucoChangeFloor from "../images/TucoChangeFloor.jpg";
 import TucoFire from "../images/TucoFire.jpg";
 import TucoFlip from "../images/TucoFlip.jpg";
 import TucoMove from "../images/TucoMove.jpg";
-import { Character } from "@gamepark/colt-super-express/Character";
+import { Bandit } from "@gamepark/colt-super-express/Bandit";
 import { ActionCard } from "@gamepark/colt-super-express/material/ActionCard";
 
 class ActionCardDescription extends CardDescription {
@@ -42,13 +42,13 @@ class ActionCardDescription extends CardDescription {
   height = 8;
 
   backImages = {
-    [Character.Belle]: BelleBack,
-    [Character.Cheyenne]: CheyenneBack,
-    [Character.Doc]: DocBack,
-    [Character.Django]: DjangoBack,
-    [Character.Tuco]: TucoBack,
-    [Character.Mei]: MeiBack,
-    [Character.Ghost]: GhostBack,
+    [Bandit.Belle]: BelleBack,
+    [Bandit.Cheyenne]: CheyenneBack,
+    [Bandit.Doc]: DocBack,
+    [Bandit.Django]: DjangoBack,
+    [Bandit.Tuco]: TucoBack,
+    [Bandit.Mei]: MeiBack,
+    [Bandit.Ghost]: GhostBack,
   };
 
   images = {

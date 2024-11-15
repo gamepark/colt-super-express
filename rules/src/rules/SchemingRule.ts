@@ -5,14 +5,14 @@ import {
   PlayMoveContext,
   SimultaneousRule,
 } from "@gamepark/rules-api";
-import { Character } from "../Character";
+import { Bandit } from "../Bandit";
 import { MaterialType } from "../material/MaterialType";
 import { LocationType } from "../material/LocationType";
 import { RuleId } from "./RuleId";
 
 export class SchemingRule extends SimultaneousRule {
   getActivePlayerLegalMoves(
-    character: Character
+    character: Bandit
   ): MaterialMove<number, number, number>[] {
     return this.material(MaterialType.ActionCard)
       .location(LocationType.PlayerHand)

@@ -3,7 +3,7 @@ import { ColtSuperExpressOptions } from "./ColtSuperExpressOptions";
 import { ColtSuperExpressRules } from "./ColtSuperExpressRules";
 import { LocationType } from "./material/LocationType";
 import { MaterialType } from "./material/MaterialType";
-import { Character } from "./Character";
+import { Bandit } from "./Bandit";
 import { RuleId } from "./rules/RuleId";
 import { actions } from "./material/Action";
 import { shuffle } from "lodash";
@@ -13,7 +13,7 @@ import { WagonFloor } from "./material/WagonFloor";
  * This class creates a new Game based on the game options
  */
 export class ColtSuperExpressSetup extends MaterialGameSetup<
-  Character,
+  Bandit,
   MaterialType,
   LocationType,
   ColtSuperExpressOptions

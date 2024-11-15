@@ -1,7 +1,7 @@
 import {  hideFrontToOthers,   hideItemId,   MaterialGame,  MaterialMove,  PositiveSequenceStrategy,  SecretMaterialRules, TimeLimit } from '@gamepark/rules-api'
 import { LocationType } from './material/LocationType'
 import { MaterialType } from './material/MaterialType'
-import { Character } from './Character'
+import { Bandit } from './Bandit'
 import { SchemingRule } from './rules/SchemingRule'
 import { RuleId } from './rules/RuleId'
 import { ShootingRule } from './rules/ShootingRule'
@@ -13,12 +13,12 @@ import { ShootingRule } from './rules/ShootingRule'
  * It must follow Game Park "Rules" API so that the Game Park server can enforce the rules.
  */
 export class ColtSuperExpressRules
-  extends SecretMaterialRules<Character, MaterialType, LocationType>
+  extends SecretMaterialRules<Bandit, MaterialType, LocationType>
   implements
     TimeLimit<
-      MaterialGame<Character, MaterialType, LocationType>,
-      MaterialMove<Character, MaterialType, LocationType>,
-      Character
+      MaterialGame<Bandit, MaterialType, LocationType>,
+      MaterialMove<Bandit, MaterialType, LocationType>,
+      Bandit
     >
 {
   rules = {
