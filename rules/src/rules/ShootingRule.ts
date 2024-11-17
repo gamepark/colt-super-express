@@ -90,6 +90,67 @@ export class ShootingRule extends PlayerTurnRule {
     ];
   }
 
+  /*getBanditBefore(...)
+  idem que getBanditAfter en x décroissant
+
+getBanditAfter(...)
+  let wagonX = myWagonX
+  while (wagonX <= maxWagonX) {
+    const banditCount = //count bandits in same location area
+    let banditX = wagonX === myWagonX ? myBanditX +1 : 0
+    while (banditX < banditCount) {
+      if (!bandit is stunned) return bandit
+    }
+    wagonX--
+  }
+  return undefined
+  
+  this.material(...).sort(item => item.location.x!)
+  */
+
+  /*
+- Regarder dans quel sens est orienté le bandit
+ Si le bandit est tourné vers la locomotive et inversement :
+    - trouver la carte où se trouve le player ayant fait l'action de tire
+    - relever une liste des cartes à suivre, carte où se trouve le bandit du player incluse
+    - trouver la première carte contentant un ou plusieurs bandits non stunned
+    - lister les bandits sur la carte en fonction de leur x
+    - tirer sur le bandit le plus proche du bandit player
+  */
+
+  fireAction() {
+    const banditFigure = this.banditFigure;
+    const banditFigureParentX = banditFigure.getItem()?.location.parent;
+    const isBanditFigureFacingLocomotive =
+      banditFigure.getItem()?.location.rotation.facingLocomotive;
+    // let wagonX = this.material(MaterialType.TrainCard).getItem()?.location.x;
+    // const maxWagonX = this.material(MaterialType.TrainCard).getItems().length;
+    // let banditCount = this.material(MaterialType.BanditFigure).getItems()
+    //   .length;
+    // let banditsOntrainCard = this.material(MaterialType.BanditFigure).getItems()
+    //   .filter(item => item.location.parent! + 1);
+    // console.log(maxWagonX);
+    // console.log(wagonX);
+    // console.log(isBanditFigureFacingLocomotive);
+    // console.log(banditCount);
+    // console.log(banditsOntrainCard);
+    const getBanditAfter = () => {
+
+      const banditCardTrainX = this.material(MaterialType.TrainCard).location((l) => l.x === banditFigureParentX! + 1).getItem()
+
+      console.log(banditCardTrainX);
+ 
+    };
+
+    getBanditAfter();
+
+    if (isBanditFigureFacingLocomotive) {
+      return [];
+    } else {
+      return [];
+    }
+  }
+
   applyActionEffect(action: Action) {
     switch (action) {
       case Action.Move:
@@ -100,6 +161,9 @@ export class ShootingRule extends PlayerTurnRule {
         break;
       case Action.ChangeFloor:
         return this.changeFloorAction();
+        break;
+      case Action.Fire:
+        return this.fireAction();
         break;
       default:
         break;

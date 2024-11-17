@@ -15,7 +15,7 @@ class BanditFigureLocator extends ListLocator {
     };
   }
 
-  gap = { x: -1.5 };
+  gap = { x: -3 };
   maxCount = 4;
   getRotateZ(location: Location) {
     if (location.rotation.stunned) {
