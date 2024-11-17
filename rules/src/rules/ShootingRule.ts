@@ -119,49 +119,64 @@ getBanditAfter(...)
   */
 
   fireAction() {
-    //méthode si le bandit regarde vers l'arrière du train
+    const banditFigure = this.banditFigure;
+    const isBanditFigureFacingLocomotive =
+      banditFigure.getItem()?.location.rotation.facingLocomotive;
     const getBanditAfter = () => {
-      //déclaratin des variables
-      const banditFigure = this.banditFigure;
-      const banditFigureParentX = banditFigure.getItem()?.location.parent;
-
-      //carte où est le bandit du joueur qui tire
-      const banditCardTrainX = this.material(MaterialType.TrainCard)
-        .location((l) => l.x === banditFigureParentX! + 1)
+      const maxWagon = this.material(MaterialType.TrainCard).getItems();
+      const trainCardX = this.material(MaterialType.TrainCard)
+        .location((l) => l.x === banditFigure.getItem()?.location.parent! + 1)
         .getItem()?.location.x;
-      //nombre de wagons du train
-      const maxWagonX = this.material(MaterialType.TrainCard).getItems().length;
-
-      //Vérifier s'il y a des bandits sur la carte train du joueur
       if (
-        this.material(MaterialType.BanditFigure)
-          .getItems()
-          .filter((bandit) => bandit.location.parent! + 1 === banditCardTrainX)
-          .length >= 2
+        this.material(MaterialType.BanditFigure).filter(
+          (bandits) => bandits.location.parent! + 1 === trainCardX
+        ).length >= 2
       ) {
-        const bandits = this.material(MaterialType.BanditFigure)
-          .location((l) => l.parent! + 1 === banditCardTrainX!)
-          .getItems()
-          .filter(
-            (bandit) => bandit.location.x! > banditFigure.getItem()?.location.x!
-          );
         console.log(banditFigure.getItem());
         console.log(
           this.material(MaterialType.BanditFigure)
-            .location((l) => l.parent! + 1 === banditCardTrainX!)
+            .location((l) => l.parent! + 1 === trainCardX)
             .getItems()
         );
-        console.log(bandits);
-      } else {
-        console.log("ca ne match pas");
-      }
 
-      //vérifier les cartes suivantes pour trouver un bandit
-      for (let x = banditCardTrainX! + 1; x! <= maxWagonX; x!++) {}
+        if (
+          this.material(MaterialType.BanditFigure)
+            .location((l) => l.parent! + 1 === trainCardX)
+            .getItems()
+            .filter(
+              (bandit) =>
+                bandit.location.x! > banditFigure.getItem()?.location.x!
+            ).length !== 0
+        ) {
+          const nextTrainCardX = this.material(MaterialType.TrainCard)
+            .location(
+              (l) => l.x === banditFigure.getItem()?.location.parent! + 2
+            )
+            .getIndex();
+
+          this.material(MaterialType.BanditFigure)
+            .location((l) => l.x! === banditFigure.getItem()?.location.x)
+            .moveItem((item) => ({
+              ...item.location,
+              parent: nextTrainCardX,
+            }));
+        }
+      } else {
+        console.log(maxWagon);
+        for (let x = trainCardX; x! <= maxWagon.length; x!++) {
+          console.log(x);
+        }
+      }
+    };
+    const getBanditBefore = () => {
+      console.log("before");
     };
 
-    getBanditAfter();
-
+    if (isBanditFigureFacingLocomotive) {
+      getBanditBefore();
+    } else {
+      getBanditAfter();
+    }
     return [];
   }
 
