@@ -119,7 +119,6 @@ getBanditAfter(...)
   */
 
   fireAction() {
-
     //méthode si le bandit regarde vers l'arrière du train
     const getBanditAfter = () => {
       //déclaratin des variables
@@ -140,16 +139,19 @@ getBanditAfter(...)
           .filter((bandit) => bandit.location.parent! + 1 === banditCardTrainX)
           .length >= 2
       ) {
-        console.log("ca match");
-        
-        // trouver tous les bandits présents sur la carte
         const bandits = this.material(MaterialType.BanditFigure)
-          .location((l)=> l.parent! + 1 === banditCardTrainX).getItems();
-        //trouver le bandits le plus proche supérieur au bandit joueur
+          .location((l) => l.parent! + 1 === banditCardTrainX!)
+          .getItems()
+          .filter(
+            (bandit) => bandit.location.x! > banditFigure.getItem()?.location.x!
+          );
         console.log(banditFigure.getItem());
-        console.log(banditFigure.getItem()?.location.x); 
-       console.log(bandits.filter(bandit => bandit.location.x! === banditFigure.getItem()?.location.x!));
-       
+        console.log(
+          this.material(MaterialType.BanditFigure)
+            .location((l) => l.parent! + 1 === banditCardTrainX!)
+            .getItems()
+        );
+        console.log(bandits);
       } else {
         console.log("ca ne match pas");
       }
