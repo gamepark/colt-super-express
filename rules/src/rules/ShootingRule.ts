@@ -107,76 +107,67 @@ getBanditAfter(...)
   
   this.material(...).sort(item => item.location.x!)
   */
+  /*  1) Regarder dans quel sens est le bandit
+        => si le bandit est vers la locomotive :
+          - regarde le x de ton wagon et boucler sur tous les x des wagons en partant sur celui là :
+            - voir s'il y a des bandits non stunned sur la carte et au même niveau:
+              - Si LE wagon que l'on regarde est le wagon du player, on filtre les plus petits (location.x) que le bandit du joueur (pas de filtre sur les autres wagons)
+                -s'il reste des bandits on prend le maxBy(item => item.location.x!) => return pour sortir de la fonction
 
-  /*
-- Regarder dans quel sens est orienté le bandit
- Si le bandit est tourné vers la locomotive et inversement :
-    - trouver la carte où se trouve le player ayant fait l'action de tire
-    - relever une liste des cartes à suivre, carte où se trouve le bandit du player incluse
-    - trouver la première carte contentant un ou plusieurs bandits non stunned
-    - lister les bandits sur la carte en fonction de leur x
-    - tirer sur le bandit le plus proche du bandit player
+        => si le bandit est vers la queue du train :
   */
-
-  fireAction() {
+  get getBanditAfter() {
     const banditFigure = this.banditFigure;
-    const isBanditFigureFacingLocomotive =
-      banditFigure.getItem()?.location.rotation.facingLocomotive;
-    const getBanditAfter = () => {
-      const maxWagon = this.material(MaterialType.TrainCard).getItems();
-      const trainCardX = this.material(MaterialType.TrainCard)
-        .location((l) => l.x === banditFigure.getItem()?.location.parent! + 1)
-        .getItem()?.location.x;
+    const banditLocation = banditFigure.getItem()!.location;
+    const trainCardX = this.material(MaterialType.TrainCard).getItem(
+      banditLocation.parent!
+    ).location.x!;
+    const maxWagonX = this.material(MaterialType.TrainCard).getItems().length;
+
+    for (let x = trainCardX; x <= maxWagonX; x++) {
       if (
         this.material(MaterialType.BanditFigure).filter(
-          (bandits) => bandits.location.parent! + 1 === trainCardX
-        ).length >= 2
+          (item) =>
+            !item.location.rotation.stunned &&
+            item.location.parent === x - 1 &&
+            item.location.parent === banditLocation.parent &&
+            item.location.id === banditLocation.id
+        ).length > 1
       ) {
-        console.log(banditFigure.getItem());
-        console.log(
-          this.material(MaterialType.BanditFigure)
-            .location((l) => l.parent! + 1 === trainCardX)
-            .getItems()
+        return this.material(MaterialType.BanditFigure).filter(
+          (item) =>
+            !item.location.rotation.stunned &&
+            item.location.parent === x - 1 &&
+            item.location.id === banditLocation.id &&
+            item.location.x! === banditLocation.x! + 1
         );
-
-        if (
-          this.material(MaterialType.BanditFigure)
-            .location((l) => l.parent! + 1 === trainCardX)
-            .getItems()
-            .filter(
-              (bandit) =>
-                bandit.location.x! > banditFigure.getItem()?.location.x!
-            ).length !== 0
-        ) {
-          const nextTrainCardX = this.material(MaterialType.TrainCard)
-            .location(
-              (l) => l.x === banditFigure.getItem()?.location.parent! + 2
-            )
-            .getIndex();
-
-          this.material(MaterialType.BanditFigure)
-            .location((l) => l.x! === banditFigure.getItem()?.location.x)
-            .moveItem((item) => ({
-              ...item.location,
-              parent: nextTrainCardX,
-            }));
-        }
-      } else {
-        console.log(maxWagon);
-        for (let x = trainCardX; x! <= maxWagon.length; x!++) {
-          console.log(x);
-        }
+      } else if (
+        this.material(MaterialType.BanditFigure).filter(
+          (bandits) =>
+            bandits.location.parent === banditLocation.parent! + x - 1 &&
+            !bandits.location.rotation.stunned &&
+            bandits.location.id === banditLocation.id!
+        ).length > 0
+      ) {
+        return this.material(MaterialType.BanditFigure)
+          .filter(
+            (bandits) =>
+              bandits.location.parent === banditLocation.parent! + x - 1 &&
+              !bandits.location.rotation.stunned &&
+              bandits.location.id === banditLocation.id!
+          )
+          .maxBy((item) => item.location.x!);
       }
-    };
-    const getBanditBefore = () => {
-      console.log("before");
-    };
-
-    if (isBanditFigureFacingLocomotive) {
-      getBanditBefore();
-    } else {
-      getBanditAfter();
     }
+    return;
+  }
+
+  get getBanditBefore() {
+    return;
+  }
+
+  fireAction() {
+    this.getBanditAfter;
     return [];
   }
 
