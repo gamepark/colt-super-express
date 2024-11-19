@@ -47,6 +47,7 @@ export class ShootingRule extends PlayerTurnRule {
       .location(LocationType.TrainLine)
       .location((location) => location.x === nextTrainCardX);
     const banditLocationId = banditFigure.getItem()?.location.id;
+    console.log("action.move");
 
     return [
       banditFigure.moveItem({
@@ -61,6 +62,7 @@ export class ShootingRule extends PlayerTurnRule {
 
   flipAction() {
     const banditFigure = this.banditFigure;
+    console.log("action.flip");
 
     return [
       banditFigure.moveItem((item) => ({
@@ -80,6 +82,7 @@ export class ShootingRule extends PlayerTurnRule {
       banditLocationId === WagonFloor.InsideTrainCar
         ? WagonFloor.OntoTheroof
         : WagonFloor.InsideTrainCar;
+    console.log("action.chanheFloor");
 
     return [
       banditFigure.moveItem((item) => ({
@@ -132,7 +135,7 @@ getBanditAfter(...)
             bandit.location.parent === banditLocation.parent &&
             bandit.location.id === banditLocation.id &&
             !bandit.location.rotation.stunned
-        ).length > 2
+        ).length >= 2
       ) {
         const banditsAfter = this.material(MaterialType.BanditFigure)
           .getItems()
@@ -145,7 +148,7 @@ getBanditAfter(...)
           );
         if (banditsAfter.length >= 1) {
           console.log(
-            "le bandit sur la même carte que le joueur actif à abattre est : "
+            "l'id du bandit sur la même carte que le joueur actif à abattre est : "
           );
           console.log(
             this.material(MaterialType.BanditFigure)
@@ -156,7 +159,7 @@ getBanditAfter(...)
           return this.material(MaterialType.BanditFigure)
             .getItems()
             .filter((bandit) => bandit.location.x! > banditLocation.x!)
-            .sort((a, b) => a.location.x! - b.location.x!);
+            .sort((a, b) => a.location.x! - b.location.x!)[0].id;
         }
         break;
       } else {
@@ -177,15 +180,17 @@ getBanditAfter(...)
                 bandit.location.id === banditLocation.id &&
                 !bandit.location.rotation.stunned
             );
+
             console.log(
-              "le bandit à abattre sur une carte suivante après est le : "
+              "l'id du bandit à abattre sur une carte suivante après est le : "
             );
             console.log(
-              banditsafter.maxBy((bandit) => bandit.location.x!).getItem()
+              banditsafter.maxBy((bandit) => bandit.location.x!).getItem()?.id
             );
 
             banditFound = true;
-            return banditsafter.maxBy((bandit) => bandit.location.x!).getItem();
+            return banditsafter.maxBy((bandit) => bandit.location.x!).getItem()
+              ?.id;
           }
         }
       }
@@ -205,11 +210,31 @@ getBanditAfter(...)
   fireAction() {
     const banditFigure = this.banditFigure;
     const banditLocation = banditFigure.getItem()!.location;
+    const banditAfterX = this.material(MaterialType.BanditFigure)
+      .id(this.getBanditAfter)
+      .getItem()?.location.parent;
+    const nextWagoncardAfterX = this.material(MaterialType.TrainCard)
+      .filter((card) => card.location.x === banditAfterX! + 2)
+      .getIndex();
+
+    console.log("action.fire");
 
     if (banditLocation.rotation.facingLocomotive) {
       this.getBanditBefore;
-    } else {
-      this.getBanditAfter;
+    } else if (!banditLocation.rotation.facingLocomotive) {
+      if (this.getBanditAfter) {
+        return [
+          this.material(MaterialType.BanditFigure)
+            .id(this.getBanditAfter)
+            .moveItem((item) => ({
+              ...item.location,
+              parent: nextWagoncardAfterX,
+              rotation: {
+                stunned: true,
+              },
+            })),
+        ];
+      }
     }
 
     return [];
