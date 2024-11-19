@@ -163,11 +163,64 @@ getBanditAfter(...)
   }
 
   get getBanditBefore() {
+    const banditFigure = this.banditFigure;
+    const banditLocation = banditFigure.getItem()!.location;
+    const trainCardX = this.material(MaterialType.TrainCard).getItem(
+      banditLocation.parent!
+    ).location.x!;
+    const maxWagonX = this.material(MaterialType.TrainCard).getItems().length;
+    for (let x = trainCardX - 1; x < maxWagonX; x++) {
+      if (
+        this.material(MaterialType.BanditFigure).filter(
+          (bandit) => bandit.location.parent === banditLocation.parent
+        ).length > 2
+      ) {
+        console.log(
+          this.material(MaterialType.BanditFigure)
+            .getItems()
+            .filter(
+              (bandit) => bandit.location.parent === banditLocation.parent
+            )
+        );
+        console.log(banditFigure.getItem());
+        
+        console.log(
+          this.material(MaterialType.BanditFigure)
+            .getItems()
+            .filter((bandit) => bandit.location.x === banditLocation.x! + 1)
+        );
+
+        break;
+      } else {
+        for (let x = trainCardX; x < maxWagonX; x++) {
+          const banditCount = this.material(MaterialType.BanditFigure).filter(
+            (bandit) => bandit.location.parent === x
+          ).length;
+          console.log(banditCount);
+
+          if (banditCount >= 1) {
+            console.log(
+              "nombre de bandit sur la prochaine carte suivant :" + banditCount
+            );
+
+            break;
+          }
+        }
+      }
+    }
     return;
   }
 
   fireAction() {
-    this.getBanditAfter;
+    const banditFigure = this.banditFigure;
+    const banditLocation = banditFigure.getItem()!.location;
+
+    if (banditLocation.rotation.facingLocomotive) {
+      this.getBanditBefore;
+    } else {
+      this.getBanditAfter;
+    }
+
     return [];
   }
 
