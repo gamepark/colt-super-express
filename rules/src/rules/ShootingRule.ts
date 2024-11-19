@@ -168,7 +168,47 @@ getBanditAfter(...)
   }
 
   get getBanditBefore() {
-    return;
+      const banditFigure = this.banditFigure;
+      const banditLocation = banditFigure.getItem()!.location;
+      const trainCard = this.material(MaterialType.TrainCard).getItem(
+        banditLocation.parent!
+      ).location.x!;
+
+      const banditsOnSameCardPlayer = this.material(MaterialType.BanditFigure)
+        .location(LocationType.InTrainBanditZone)
+        .parent(banditLocation.parent)
+        .filter(
+          (bandit) =>
+            !bandit.location.rotation.stunned &&
+            bandit.location.rotation.id === banditLocation.rotation.id
+        );
+
+      if (banditsOnSameCardPlayer.length >= 2) {
+        console.log(banditsOnSameCardPlayer.getItems());
+        const banditsAfterplayer = banditsOnSameCardPlayer.filter(
+          (bandit) => bandit.location.x! < banditLocation.x!
+        );
+        if (banditsAfterplayer.length > 0) {
+          return banditsAfterplayer.maxBy((bandit) => bandit.location.x!);
+        }
+    }
+      for (let x = trainCard - 1; x >= 0; x--) {
+        const nextTrainCardIndex = this.material(MaterialType.TrainCard)
+          .location((l) => l.x === x)
+          .getIndex();
+        const banditsOnNextCard = this.material(MaterialType.BanditFigure)
+          .location(LocationType.InTrainBanditZone)
+          .parent(nextTrainCardIndex)
+          .filter(
+            (bandit) =>
+              !bandit.location.rotation.stunned &&
+              bandit.location.rotation.id === banditLocation.rotation.id
+          );
+        if (banditsOnNextCard.length > 0) {
+          return banditsOnNextCard.minBy((bandit) => bandit.location.x!);
+        }
+      }
+    return
   }
 
   fireAction() {
@@ -177,7 +217,20 @@ getBanditAfter(...)
     console.log("action.fire");
 
     if (banditLocation.rotation.facingLocomotive) {
-      this.getBanditBefore;
+      if(this.getBanditBefore ){ const nextWagonCardBeforeX =
+        this.getBanditBefore.getItem()?.location.parent! - 1;
+      return [
+        this.material(MaterialType.BanditFigure)
+          .id(this.getBanditBefore.getItem()!.id)
+          .moveItem((item) => ({
+            ...item.location,
+            parent: nextWagonCardBeforeX,
+            rotation: {
+              stunned: true,
+            },
+          })),
+      ];}
+      
     } else if (!banditLocation.rotation.facingLocomotive) {
       if (this.getBanditAfter) {
         const nextWagonCardAfterX =
