@@ -123,91 +123,82 @@ getBanditAfter(...)
       banditLocation.parent!
     ).location.x!;
     const maxWagonX = this.material(MaterialType.TrainCard).getItems().length;
+    let banditFound = false;
 
-    for (let x = trainCardX; x <= maxWagonX; x++) {
+    for (let x = trainCardX - 1; x < maxWagonX; x++) {
       if (
         this.material(MaterialType.BanditFigure).filter(
-          (item) =>
-            !item.location.rotation.stunned &&
-            item.location.parent === x - 1 &&
-            item.location.parent === banditLocation.parent &&
-            item.location.id === banditLocation.id
-        ).length > 1
+          (bandit) =>
+            bandit.location.parent === banditLocation.parent &&
+            bandit.location.id === banditLocation.id &&
+            !bandit.location.rotation.stunned
+        ).length > 2
       ) {
-        return this.material(MaterialType.BanditFigure).filter(
-          (item) =>
-            !item.location.rotation.stunned &&
-            item.location.parent === x - 1 &&
-            item.location.id === banditLocation.id &&
-            item.location.x! === banditLocation.x! + 1
-        );
-      } else if (
-        this.material(MaterialType.BanditFigure).filter(
-          (bandits) =>
-            bandits.location.parent === banditLocation.parent! + x - 1 &&
-            !bandits.location.rotation.stunned &&
-            bandits.location.id === banditLocation.id!
-        ).length > 0
-      ) {
-        return this.material(MaterialType.BanditFigure)
+        const banditsAfter = this.material(MaterialType.BanditFigure)
+          .getItems()
           .filter(
-            (bandits) =>
-              bandits.location.parent === banditLocation.parent! + x - 1 &&
-              !bandits.location.rotation.stunned &&
-              bandits.location.id === banditLocation.id!
-          )
-          .maxBy((item) => item.location.x!);
+            (bandit) =>
+              bandit.location.x! > banditLocation.x! &&
+              bandit.location.parent === banditLocation.parent &&
+              bandit.location.id === banditLocation.id &&
+              !bandit.location.rotation.stunned
+          );
+        if (banditsAfter.length >= 1) {
+          console.log(
+            "le bandit sur la même carte que le joueur actif à abattre est : "
+          );
+          console.log(
+            this.material(MaterialType.BanditFigure)
+              .getItems()
+              .filter((bandit) => bandit.location.x! > banditLocation.x!)
+              .sort((a, b) => a.location.x! - b.location.x!)
+          );
+          return this.material(MaterialType.BanditFigure)
+            .getItems()
+            .filter((bandit) => bandit.location.x! > banditLocation.x!)
+            .sort((a, b) => a.location.x! - b.location.x!);
+        }
+        break;
+      } else {
+        for (let x = trainCardX; x < maxWagonX; x++) {
+          const banditCount = this.material(MaterialType.BanditFigure).filter(
+            (bandit) =>
+              bandit.location.parent === x &&
+              bandit.location.id === banditLocation.id &&
+              !bandit.location.rotation.stunned
+          ).length;
+
+          if (banditCount >= 1) {
+            const banditsafter = this.material(
+              MaterialType.BanditFigure
+            ).filter(
+              (bandit) =>
+                bandit.location.parent === x &&
+                bandit.location.id === banditLocation.id &&
+                !bandit.location.rotation.stunned
+            );
+            console.log(
+              "le bandit à abattre sur une carte suivante après est le : "
+            );
+            console.log(
+              banditsafter.maxBy((bandit) => bandit.location.x!).getItem()
+            );
+
+            banditFound = true;
+            return banditsafter.maxBy((bandit) => bandit.location.x!).getItem();
+          }
+        }
       }
+    }
+    if (!banditFound) {
+      console.log("Pas de bandits trouvés");
     }
     return;
   }
 
   get getBanditBefore() {
-    const banditFigure = this.banditFigure;
-    const banditLocation = banditFigure.getItem()!.location;
-    const trainCardX = this.material(MaterialType.TrainCard).getItem(
-      banditLocation.parent!
-    ).location.x!;
-    const maxWagonX = this.material(MaterialType.TrainCard).getItems().length;
-    for (let x = trainCardX - 1; x < maxWagonX; x++) {
-      if (
-        this.material(MaterialType.BanditFigure).filter(
-          (bandit) => bandit.location.parent === banditLocation.parent
-        ).length > 2
-      ) {
-        console.log(
-          this.material(MaterialType.BanditFigure)
-            .getItems()
-            .filter(
-              (bandit) => bandit.location.parent === banditLocation.parent
-            )
-        );
-        console.log(banditFigure.getItem());
-        
-        console.log(
-          this.material(MaterialType.BanditFigure)
-            .getItems()
-            .filter((bandit) => bandit.location.x === banditLocation.x! + 1)
-        );
+    console.log("before");
 
-        break;
-      } else {
-        for (let x = trainCardX; x < maxWagonX; x++) {
-          const banditCount = this.material(MaterialType.BanditFigure).filter(
-            (bandit) => bandit.location.parent === x
-          ).length;
-          console.log(banditCount);
-
-          if (banditCount >= 1) {
-            console.log(
-              "nombre de bandit sur la prochaine carte suivant :" + banditCount
-            );
-
-            break;
-          }
-        }
-      }
-    }
     return;
   }
 
