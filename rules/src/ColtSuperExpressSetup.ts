@@ -30,6 +30,14 @@ export class ColtSuperExpressSetup extends MaterialGameSetup<
   setupTrain() {
     const cars = shuffle([301, 312, 323, 345, 356, 367, 378, 389]);
 
+    this.material(MaterialType.LocomotiveCard).createItem({
+      id: 0,
+      location: {
+        type: LocationType.TrainLine,
+        x: 0,
+      },
+    });
+
     for (let x = 1; x <= this.game.players.length + 1; x++) {
       this.material(MaterialType.TrainCard).createItem({
         id: cars.pop(),
