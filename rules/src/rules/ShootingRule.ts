@@ -40,6 +40,8 @@ export class ShootingRule extends PlayerTurnRule {
   }
 
   moveAction() {
+    console.log("Move action");
+
     const isBanditStunned = this.isBanditStunned;
     const banditFigure = this.banditFigure;
     const banditLocation = banditFigure.getItem()!.location;
@@ -53,10 +55,20 @@ export class ShootingRule extends PlayerTurnRule {
       .location(LocationType.TrainLine)
       .location((location) => location.x === nextTrainCardX);
     const banditLocationId = banditFigure.getItem()?.location.id;
-    console.log(nextTrainCard.getIndex());
-console.log(nextTrainCard);
 
     if (!isBanditStunned) {
+      if (nextTrainCard.getIndex() === -1) {
+        console.log("bienvenue sur la loco !!!");
+        return [
+          banditFigure.moveItem({
+            id: banditLocationId,
+            type: LocationType.InTrainBanditZone,
+            parent: undefined,
+            rotation: banditLocation.rotation,
+            x: banditLocation.rotation.facingLocomotive ? undefined : 0,
+          }),
+        ];
+      }
       return [
         banditFigure.moveItem({
           id: banditLocationId,
@@ -79,6 +91,8 @@ console.log(nextTrainCard);
   }
 
   flipAction() {
+    console.log("flip action");
+
     const banditFigure = this.banditFigure;
     const isBanditStunned = this.isBanditStunned;
     if (!isBanditStunned) {
@@ -104,6 +118,8 @@ console.log(nextTrainCard);
   }
 
   changeFloorAction() {
+    console.log("changeFloor action");
+
     const isBanditStunned = this.isBanditStunned;
     const banditFigure = this.banditFigure;
     const banditLocationId = banditFigure.getItem()?.location.id;
@@ -221,6 +237,8 @@ console.log(nextTrainCard);
   }
 
   fireAction() {
+    console.log("fireAction");
+
     const isBanditStunned = this.isBanditStunned;
     const banditFigure = this.banditFigure;
     const banditLocation = banditFigure.getItem()!.location;
@@ -240,18 +258,30 @@ console.log(nextTrainCard);
       .location((location) => location.x === nextTrainCardX);
 
     //algo pour voir s'il y a des bandits dans la carte wagon où est expulsé le bandit une fois touché et le placer en fonction
-    // console.log(
-    //   "Bandits sur la carte wagon :  " +
-    //     this.material(MaterialType.BanditFigure)
-    //       .getItems()
-    //       .filter(
-    //         (parent) => parent.location.parent === nextTrainCard.getIndex()
-    //       ).length
-    // );
+    console.log(this.material(MaterialType.TrainCard).getItems());
+    console.log(nextTrainCard.getIndex());
+    console.log(this.material(MaterialType.BanditFigure).getItems());
+    const banditsTargetNewLocationX = this.material(MaterialType.BanditFigure).filter((bandit) => bandit.location.parent === nextTrainCard.getIndex()).getItems().length;
+    console.log(banditsTargetNewLocationX);
+    
 
     if (!isBanditStunned) {
       if (banditLocation.rotation.facingLocomotive) {
         if (this.getBanditBefore) {
+          if (nextTrainCard.getIndex() === -1) {
+            console.log("bienvenue sur la loco !!!");
+            return [
+              this.material(MaterialType.BanditFigure)
+                .id(this.getBanditBefore.getItem()!.id)
+                .moveItem((item) => ({
+                  ...item.location,
+                  parent: undefined,
+                  rotation: {
+                    stunned: true,
+                  },
+                })),
+            ];
+          }
           return [
             this.material(MaterialType.BanditFigure)
               .id(this.getBanditBefore.getItem()!.id)
@@ -261,6 +291,7 @@ console.log(nextTrainCard);
                 rotation: {
                   stunned: true,
                 },
+                x:banditsTargetNewLocationX
               })),
           ];
         }
@@ -275,6 +306,7 @@ console.log(nextTrainCard);
                 rotation: {
                   stunned: true,
                 },
+                x:0
               })),
           ];
         }
