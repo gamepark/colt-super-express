@@ -53,6 +53,8 @@ export class ShootingRule extends PlayerTurnRule {
       .location(LocationType.TrainLine)
       .location((location) => location.x === nextTrainCardX);
     const banditLocationId = banditFigure.getItem()?.location.id;
+    console.log(nextTrainCard.getIndex());
+console.log(nextTrainCard);
 
     if (!isBanditStunned) {
       return [
@@ -236,7 +238,6 @@ export class ShootingRule extends PlayerTurnRule {
     const nextTrainCard = this.material(MaterialType.TrainCard)
       .location(LocationType.TrainLine)
       .location((location) => location.x === nextTrainCardX);
-console.log(this.material(MaterialType.TrainCard).getItems());
 
     //algo pour voir s'il y a des bandits dans la carte wagon où est expulsé le bandit une fois touché et le placer en fonction
     // console.log(
@@ -251,10 +252,6 @@ console.log(this.material(MaterialType.TrainCard).getItems());
     if (!isBanditStunned) {
       if (banditLocation.rotation.facingLocomotive) {
         if (this.getBanditBefore) {
-            if (nextTrainCard.getIndex() === -1) {
-              console.log("bienvenue sur la locomotive");
-              return [];
-            }
           return [
             this.material(MaterialType.BanditFigure)
               .id(this.getBanditBefore.getItem()!.id)

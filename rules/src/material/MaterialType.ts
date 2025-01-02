@@ -3,5 +3,4 @@ export enum MaterialType {
     ActionCard,
     BanditFigure,
     FirstPlayerCard,
-    LocomotiveCard
 }

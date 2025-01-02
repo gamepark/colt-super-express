@@ -1,7 +1,7 @@
 import { CardDescription } from "@gamepark/react-game";
 import Locomotive from "../images/Locomotive.jpg";
 import Car from "../images/TrainCar.jpg";
-// import { LocationType } from "@gamepark/colt-super-express/material/LocationType";
+import { LocationType } from "@gamepark/colt-super-express/material/LocationType";
 import TrainCard301 from "../images/TrainCar301.jpg";
 import TrainCard312 from "../images/TrainCar312.jpg";
 import TrainCard323 from "../images/TrainCar323.jpg";
@@ -28,13 +28,13 @@ class TrainCardDescription extends CardDescription {
 
   backImage = Car;
 
-  // staticItem = {
-  //   id: 0,
-  //   location: {
-  //     type: LocationType.TrainLine,
-  //     x: 0,
-  //   },
-  // };
+  staticItem = {
+    id: 0,
+    location: {
+      type: LocationType.TrainLine,
+      x: 0,
+    },
+  };
 }
 
 export const trainCardDescription = new TrainCardDescription();
