@@ -68,16 +68,27 @@ export class ShootingRule extends PlayerTurnRule {
             x: banditLocation.rotation.facingLocomotive ? undefined : 0,
           }),
         ];
+      } else if (
+        nextTrainCard.getIndex() >=
+          this.material(MaterialType.TrainCard).getItems().length ||
+        nextTrainCard.getIndex() < -1
+      ) {
+        return [
+          banditFigure.moveItem((item) => ({
+            ...item.location,
+          })),
+        ];
+      } else {
+        return [
+          banditFigure.moveItem({
+            id: banditLocationId,
+            type: LocationType.InTrainBanditZone,
+            parent: nextTrainCard.getIndex(),
+            rotation: banditLocation.rotation,
+            x: banditLocation.rotation.facingLocomotive ? undefined : 0,
+          }),
+        ];
       }
-      return [
-        banditFigure.moveItem({
-          id: banditLocationId,
-          type: LocationType.InTrainBanditZone,
-          parent: nextTrainCard.getIndex(),
-          rotation: banditLocation.rotation,
-          x: banditLocation.rotation.facingLocomotive ? undefined : 0,
-        }),
-      ];
     } else {
       return [
         banditFigure.moveItem((item) => ({
@@ -170,7 +181,7 @@ export class ShootingRule extends PlayerTurnRule {
         (bandit) => bandit.location.x! > banditLocation.x!
       );
       if (banditsAfterplayer.length > 0) {
-        return banditsAfterplayer.maxBy((bandit) => bandit.location.x!);
+        return banditsAfterplayer.minBy((bandit) => bandit.location.x!);
       }
     }
 
@@ -187,7 +198,7 @@ export class ShootingRule extends PlayerTurnRule {
             bandit.location.id === banditLocation.id
         );
       if (banditsOnNextCard.length > 0) {
-        return banditsOnNextCard.maxBy((bandit) => bandit.location.x!);
+        return banditsOnNextCard.minBy((bandit) => bandit.location.x!);
       }
     }
     return;
@@ -214,7 +225,7 @@ export class ShootingRule extends PlayerTurnRule {
         (bandit) => bandit.location.x! < banditLocation.x!
       );
       if (banditsAfterplayer.length > 0) {
-        return banditsAfterplayer.minBy((bandit) => bandit.location.x!);
+        return banditsAfterplayer.maxBy((bandit) => bandit.location.x!);
       }
     }
     for (let x = trainCard - 1; x >= 0; x--) {
@@ -230,7 +241,7 @@ export class ShootingRule extends PlayerTurnRule {
             bandit.location.id === banditLocation.id
         );
       if (banditsOnNextCard.length > 0) {
-        return banditsOnNextCard.minBy((bandit) => bandit.location.x!);
+        return banditsOnNextCard.maxBy((bandit) => bandit.location.x!);
       }
     }
     return;
@@ -256,14 +267,9 @@ export class ShootingRule extends PlayerTurnRule {
     const nextTrainCard = this.material(MaterialType.TrainCard)
       .location(LocationType.TrainLine)
       .location((location) => location.x === nextTrainCardX);
-
-    //algo pour voir s'il y a des bandits dans la carte wagon où est expulsé le bandit une fois touché et le placer en fonction
-    console.log(this.material(MaterialType.TrainCard).getItems());
-    console.log(nextTrainCard.getIndex());
-    console.log(this.material(MaterialType.BanditFigure).getItems());
-    const banditsTargetNewLocationX = this.material(MaterialType.BanditFigure).filter((bandit) => bandit.location.parent === nextTrainCard.getIndex()).getItems().length;
-    console.log(banditsTargetNewLocationX);
-    
+    const banditsTargetNewLocationX = this.material(MaterialType.BanditFigure)
+      .filter((bandit) => bandit.location.parent === nextTrainCard.getIndex() && bandit.location.id === banditLocation.id)
+      .getItems().length;
 
     if (!isBanditStunned) {
       if (banditLocation.rotation.facingLocomotive) {
@@ -291,7 +297,7 @@ export class ShootingRule extends PlayerTurnRule {
                 rotation: {
                   stunned: true,
                 },
-                x:banditsTargetNewLocationX
+                x: banditsTargetNewLocationX,
               })),
           ];
         }
@@ -306,7 +312,7 @@ export class ShootingRule extends PlayerTurnRule {
                 rotation: {
                   stunned: true,
                 },
-                x:0
+                x: 0,
               })),
           ];
         }
@@ -343,4 +349,5 @@ export class ShootingRule extends PlayerTurnRule {
     }
     return [];
   }
+
 }
