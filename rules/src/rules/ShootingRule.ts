@@ -1,4 +1,4 @@
-import { PlayerTurnRule } from "@gamepark/rules-api";
+import { MaterialMove, PlayerTurnRule } from "@gamepark/rules-api";
 import { MaterialType } from "../material/MaterialType";
 import { LocationType } from "../material/LocationType";
 import { ActionCardId, getAction } from "../material/ActionCard";
@@ -24,10 +24,27 @@ export class ShootingRule extends PlayerTurnRule {
     return [
       playerPile.dealOne({
         type: LocationType.ShootingZone,
+        player: this.player,
       }),
       ...this.applyActionEffect(getAction(actionCard)),
       this.startPlayerTurn(RuleId.Shooting, this.nextPlayer),
     ];
+  }
+
+  clearPlayerMaterials(playerId: number) {
+    const moves: MaterialMove[] = [];
+
+    const actionCardsDelete = this.material(MaterialType.ActionCard)
+      .filter((card) => card.location.player === playerId)
+      .deleteItems();
+    moves.push(...actionCardsDelete);
+
+    const banditFiguredelete = this.material(MaterialType.BanditFigure)
+      .filter((item) => item.id === playerId)
+      .deleteItem();
+    moves.push(banditFiguredelete);
+
+    return moves;
   }
 
   get banditFigure() {
@@ -41,10 +58,13 @@ export class ShootingRule extends PlayerTurnRule {
 
   moveAction() {
     console.log("Move action");
-
+    
     const isBanditStunned = this.isBanditStunned;
     const banditFigure = this.banditFigure;
+    const banditFigureId = banditFigure.getItem()?.id;
     const banditLocation = banditFigure.getItem()!.location;
+    const banditLocationId = banditFigure.getItem()?.location.id;
+
     const trainCardX = this.material(MaterialType.TrainCard).getItem(
       banditLocation.parent!
     ).location.x!;
@@ -54,10 +74,23 @@ export class ShootingRule extends PlayerTurnRule {
     const nextTrainCard = this.material(MaterialType.TrainCard)
       .location(LocationType.TrainLine)
       .location((location) => location.x === nextTrainCardX);
-    const banditLocationId = banditFigure.getItem()?.location.id;
+    console.log(banditFigure.getItem()?.location.parent);
+    console.log(this.material(MaterialType.TrainCard).length);
+    console.log(nextTrainCard.getIndex());
 
     if (!isBanditStunned) {
-      if (nextTrainCard.getIndex() === -1) {
+      if (
+        banditLocation.parent === undefined &&
+        banditLocation.rotation.facingLocomotive
+      ) {
+        console.log("le bandit saute de la loco");
+        return this.clearPlayerMaterials(banditFigureId);
+      }
+      else if (
+        nextTrainCard.getIndex() === -1 &&
+        banditFigure.getItem()?.location.parent !==
+          this.material(MaterialType.TrainCard).length - 1
+      ) {
         console.log("bienvenue sur la loco !!!");
         return [
           banditFigure.moveItem({
@@ -68,17 +101,30 @@ export class ShootingRule extends PlayerTurnRule {
             x: banditLocation.rotation.facingLocomotive ? undefined : 0,
           }),
         ];
-      } else if (
-        nextTrainCard.getIndex() >=
-          this.material(MaterialType.TrainCard).getItems().length ||
-        nextTrainCard.getIndex() < -1
+      }
+      else if (
+        banditFigure.getItem()?.location.parent === undefined &&
+        !banditLocation.rotation.facingLocomotive
       ) {
+        console.log("je move de la loco vers la queue du train");
         return [
-          banditFigure.moveItem((item) => ({
-            ...item.location,
-          })),
+          banditFigure.moveItem({
+            id: banditLocationId,
+            type: LocationType.InTrainBanditZone,
+            parent: 0,
+            rotation: banditLocation.rotation,
+            x: banditLocation.rotation.facingLocomotive ? undefined : 0,
+          }),
         ];
+      } else if (
+        nextTrainCard.getIndex() === -1 &&
+        banditFigure.getItem()?.location.parent ===
+          this.material(MaterialType.TrainCard).length - 1
+      ) {
+        console.log("je saute du train par le dernier wagon");
+        return this.clearPlayerMaterials(banditFigureId);
       } else {
+        console.log("mouvement normal");
         return [
           banditFigure.moveItem({
             id: banditLocationId,
@@ -90,6 +136,7 @@ export class ShootingRule extends PlayerTurnRule {
         ];
       }
     } else {
+      console.log("je me redresse");      
       return [
         banditFigure.moveItem((item) => ({
           ...item.location,
@@ -268,7 +315,11 @@ export class ShootingRule extends PlayerTurnRule {
       .location(LocationType.TrainLine)
       .location((location) => location.x === nextTrainCardX);
     const banditsTargetNewLocationX = this.material(MaterialType.BanditFigure)
-      .filter((bandit) => bandit.location.parent === nextTrainCard.getIndex() && bandit.location.id === banditLocation.id)
+      .filter(
+        (bandit) =>
+          bandit.location.parent === nextTrainCard.getIndex() &&
+          bandit.location.id === banditLocation.id
+      )
       .getItems().length;
 
     if (!isBanditStunned) {
@@ -349,5 +400,4 @@ export class ShootingRule extends PlayerTurnRule {
     }
     return [];
   }
-
 }
