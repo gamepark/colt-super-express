@@ -57,7 +57,6 @@ export class ShootingRule extends PlayerTurnRule {
   }
 
   moveAction() {
-
     const isBanditStunned = this.isBanditStunned;
     const banditFigure = this.banditFigure;
     const banditFigureId = banditFigure.getItem()?.id;
@@ -73,7 +72,6 @@ export class ShootingRule extends PlayerTurnRule {
     const nextTrainCard = this.material(MaterialType.TrainCard)
       .location(LocationType.TrainLine)
       .location((location) => location.x === nextTrainCardX);
-
 
     if (!isBanditStunned) {
       if (
@@ -130,6 +128,7 @@ export class ShootingRule extends PlayerTurnRule {
         banditFigure.moveItem((item) => ({
           ...item.location,
           rotation: {
+            ...item.location.rotation,
             stunned: false,
           },
         })),
@@ -138,7 +137,6 @@ export class ShootingRule extends PlayerTurnRule {
   }
 
   flipAction() {
-
     const banditFigure = this.banditFigure;
     const isBanditStunned = this.isBanditStunned;
     if (!isBanditStunned) {
@@ -156,6 +154,7 @@ export class ShootingRule extends PlayerTurnRule {
         banditFigure.moveItem((item) => ({
           ...item.location,
           rotation: {
+            ...item.location.rotation,
             stunned: false,
           },
         })),
@@ -164,7 +163,6 @@ export class ShootingRule extends PlayerTurnRule {
   }
 
   changeFloorAction() {
-
     const isBanditStunned = this.isBanditStunned;
     const banditFigure = this.banditFigure;
     const banditLocationId = banditFigure.getItem()?.location.id;
@@ -186,6 +184,7 @@ export class ShootingRule extends PlayerTurnRule {
         banditFigure.moveItem((item) => ({
           ...item.location,
           rotation: {
+            ...item.location.rotation,
             stunned: false,
           },
         })),
@@ -313,7 +312,7 @@ export class ShootingRule extends PlayerTurnRule {
       if (banditLocation.rotation.facingLocomotive) {
         if (this.getBanditBefore) {
           if (this.getBanditBefore.getItem()?.location.parent === undefined) {
-            console.log("bandit à tuer sur loco");        
+            console.log("bandit à tuer sur loco");
             return this.clearPlayerMaterials(
               this.getBanditBefore.getItem()?.id
             );
@@ -326,12 +325,14 @@ export class ShootingRule extends PlayerTurnRule {
                   ...item.location,
                   parent: undefined,
                   rotation: {
+                    ...item.location.rotation,
                     stunned: true,
                   },
                 })),
             ];
           } else {
-            console.log("bandit à tuer juste avant");          
+            console.log("bandit à tuer juste avant go");
+            console.log(this.getBanditBefore.getItem());
             return [
               this.material(MaterialType.BanditFigure)
                 .id(this.getBanditBefore.getItem()!.id)
@@ -339,6 +340,7 @@ export class ShootingRule extends PlayerTurnRule {
                   ...item.location,
                   parent: nextTrainCard.getIndex(),
                   rotation: {
+                    ...item.location.rotation,
                     stunned: true,
                   },
                   x: banditsTargetNewLocationX,
@@ -348,7 +350,7 @@ export class ShootingRule extends PlayerTurnRule {
         }
       } else if (!banditLocation.rotation.facingLocomotive) {
         if (this.getBanditAfter) {
-          console.log("bandit après");      
+          console.log("bandit après");
           return [
             this.material(MaterialType.BanditFigure)
               .id(this.getBanditAfter.getItem()!.id)
@@ -356,6 +358,7 @@ export class ShootingRule extends PlayerTurnRule {
                 ...item.location,
                 parent: nextTrainCard.getIndex(),
                 rotation: {
+                  ...item.location.rotation,
                   stunned: true,
                 },
                 x: 0,
@@ -368,6 +371,7 @@ export class ShootingRule extends PlayerTurnRule {
         banditFigure.moveItem((item) => ({
           ...item.location,
           rotation: {
+            ...item.location.rotation,
             stunned: false,
           },
         })),
