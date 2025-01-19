@@ -78,12 +78,15 @@ export class ShootingRule extends PlayerTurnRule {
         banditLocation.parent === undefined &&
         banditLocation.rotation.facingLocomotive
       ) {
+        console.log("le bandit move de la loco vers le vide et meurt");
         return this.clearPlayerMaterials(banditFigureId);
       } else if (
         nextTrainCard.getIndex() === -1 &&
         banditFigure.getItem()?.location.parent !==
           this.material(MaterialType.TrainCard).length - 1
       ) {
+        console.log("le bandit va sur la locomotive");
+
         return [
           banditFigure.moveItem({
             id: banditLocationId,
@@ -97,6 +100,8 @@ export class ShootingRule extends PlayerTurnRule {
         banditFigure.getItem()?.location.parent === undefined &&
         !banditLocation.rotation.facingLocomotive
       ) {
+        console.log("le bandit bouge de la locomotive vers le premier wagon");
+
         return [
           banditFigure.moveItem({
             id: banditLocationId,
@@ -111,8 +116,10 @@ export class ShootingRule extends PlayerTurnRule {
         banditFigure.getItem()?.location.parent ===
           this.material(MaterialType.TrainCard).length - 1
       ) {
+        console.log("le bandit move et tombe du train par le dernier wagon");
         return this.clearPlayerMaterials(banditFigureId);
       } else {
+        console.log("le bandit move normalement");
         return [
           banditFigure.moveItem({
             id: banditLocationId,
@@ -124,6 +131,7 @@ export class ShootingRule extends PlayerTurnRule {
         ];
       }
     } else {
+      console.log("le bandit se redresse");
       return [
         banditFigure.moveItem((item) => ({
           ...item.location,
@@ -139,6 +147,7 @@ export class ShootingRule extends PlayerTurnRule {
   flipAction() {
     const banditFigure = this.banditFigure;
     const isBanditStunned = this.isBanditStunned;
+
     if (!isBanditStunned) {
       return [
         banditFigure.moveItem((item) => ({
@@ -209,6 +218,7 @@ export class ShootingRule extends PlayerTurnRule {
           bandit.location.id === banditLocation.id
       );
 
+    // plus ou egal deux bandits sur meme cartes que bandit qui tire
     if (banditsOnSameCardPlayer.length >= 2) {
       const banditsAfterplayer = banditsOnSameCardPlayer.filter(
         (bandit) => bandit.location.x! > banditLocation.x!
@@ -217,6 +227,30 @@ export class ShootingRule extends PlayerTurnRule {
         return banditsAfterplayer.minBy((bandit) => bandit.location.x!);
       }
     }
+
+    // tir depuis la locomotive sur bandits sur la loco
+    if (banditLocation.parent === undefined) {
+      if (
+        this.material(MaterialType.BanditFigure)
+          .location(LocationType.InTrainBanditZone)
+          .parent(undefined)
+      ) {
+        const banditsOnLoco = this.material(MaterialType.BanditFigure)
+          .location(LocationType.InTrainBanditZone)
+          .parent(undefined)
+
+        if (banditsOnLoco.length >= 2) {
+          const banditFound = banditsOnLoco.filter(
+            (bandit) => bandit.location.x === banditLocation.x! + 1
+          );
+          if (banditFound) {
+            return banditFound;
+          }
+        }
+      }
+    }
+
+    // tir depuis la loco sur bandits hors loco
 
     for (let x = trainCard + 1; x <= maxWagonX; x++) {
       const nextTrainCardIndex = this.material(MaterialType.TrainCard)
@@ -253,7 +287,47 @@ export class ShootingRule extends PlayerTurnRule {
           bandit.location.id === banditLocation.id
       );
 
+    //tu es sur la loco et d'autres bandits sont avec toi et vers le sens de la loco
+    if (banditLocation.parent === undefined) {
+      console.log("tu tires depuis la loco");
+      const banditsOnLoco = this.material(MaterialType.BanditFigure)
+        .location(LocationType.InTrainBanditZone)
+        .parent(undefined);
+
+      if (banditsOnLoco.getItems().length >= 2) {
+        const banditLocationX = banditLocation.x;
+        const banditFound = banditsOnLoco.filter(
+          (b) => b.location.x === banditLocationX! - 1
+        );
+        if (banditFound) {
+          return banditFound;
+        }
+      }
+    }
+
+    if (
+      this.material(MaterialType.TrainCard)
+        .location((l) => l.x === trainCard - 1)
+        .getItems().length === 0
+    ) {
+      console.log(
+        "tu cherches des bandits sur la loco depuis l'exterieur de la loco"
+      );
+      const banditsOnNextCard = this.material(MaterialType.BanditFigure)
+        .location(LocationType.InTrainBanditZone)
+        .parent(undefined)
+        .filter(
+          (bandit) =>
+            !bandit.location.rotation.stunned &&
+            bandit.location.id === banditLocation.id
+        );
+      if (banditsOnNextCard.length > 0) {
+        return banditsOnNextCard.maxBy((bandit) => bandit.location.x!);
+      }
+    }
     if (banditsOnSameCardPlayer.length >= 2) {
+      console.log("les bandits visés sont sur ta carte");
+
       const banditsAfterplayer = banditsOnSameCardPlayer.filter(
         (bandit) => bandit.location.x! < banditLocation.x!
       );
@@ -262,6 +336,8 @@ export class ShootingRule extends PlayerTurnRule {
       }
     }
     for (let x = trainCard - 1; x >= 0; x--) {
+      console.log("on boucle sur les cartes avant");
+
       const nextTrainCardIndex = this.material(MaterialType.TrainCard)
         .location((l) => l.x === x)
         .getIndex();
@@ -281,8 +357,6 @@ export class ShootingRule extends PlayerTurnRule {
   }
 
   fireAction() {
-    console.log("fireAction");
-
     const isBanditStunned = this.isBanditStunned;
     const banditFigure = this.banditFigure;
     const banditLocation = banditFigure.getItem()!.location;
@@ -309,15 +383,25 @@ export class ShootingRule extends PlayerTurnRule {
       .getItems().length;
 
     if (!isBanditStunned) {
-      if (banditLocation.rotation.facingLocomotive) {
+      if (banditLocation.parent === undefined) {
+        if (banditLocation.rotation.facingLocomotive) {
+          return this.clearPlayerMaterials(this.getBanditBefore?.getItem()?.id)
+        } else if (!banditLocation.rotation.facingLocomotive) {
+          return this.clearPlayerMaterials(this.getBanditAfter?.getItem()?.id);
+        }
+      }
+      else if (banditLocation.rotation.facingLocomotive && banditLocation.parent !== undefined) {
         if (this.getBanditBefore) {
           if (this.getBanditBefore.getItem()?.location.parent === undefined) {
-            console.log("bandit à tuer sur loco");
+            console.log(this.getBanditBefore);
             return this.clearPlayerMaterials(
-              this.getBanditBefore.getItem()?.id
+              this.getBanditBefore!.getItem()?.id
             );
           } else if (nextTrainCard.getIndex() === -1) {
-            console.log("bandit à tuer envoyé sur loco");
+            console.log(
+              "le bandit est tiré et envoyé vers le loco et trouvé par before"
+            );
+
             return [
               this.material(MaterialType.BanditFigure)
                 .id(this.getBanditBefore.getItem()!.id)
@@ -331,8 +415,10 @@ export class ShootingRule extends PlayerTurnRule {
                 })),
             ];
           } else {
-            console.log("bandit à tuer juste avant go");
-            console.log(this.getBanditBefore.getItem());
+            console.log(
+              "le bandit est trouvé par before et envoyé sur un wagon"
+            );
+
             return [
               this.material(MaterialType.BanditFigure)
                 .id(this.getBanditBefore.getItem()!.id)
@@ -348,9 +434,13 @@ export class ShootingRule extends PlayerTurnRule {
             ];
           }
         }
-      } else if (!banditLocation.rotation.facingLocomotive) {
+      } else if (
+        !banditLocation.rotation.facingLocomotive &&
+        banditLocation.parent !== undefined
+      ) {
         if (this.getBanditAfter) {
-          console.log("bandit après");
+          console.log("le bandit est apres c'est tout pour l'instant");
+
           return [
             this.material(MaterialType.BanditFigure)
               .id(this.getBanditAfter.getItem()!.id)
@@ -366,7 +456,8 @@ export class ShootingRule extends PlayerTurnRule {
           ];
         }
       }
-    } else {
+    }
+    else {
       return [
         banditFigure.moveItem((item) => ({
           ...item.location,
@@ -377,6 +468,10 @@ export class ShootingRule extends PlayerTurnRule {
         })),
       ];
     }
+    console.log(
+      "pas de solution, cas des tirs sur bandit dans loco ou hors loco, pour before ou after"
+    );
+
     return [];
   }
 
@@ -400,3 +495,8 @@ export class ShootingRule extends PlayerTurnRule {
     return [];
   }
 }
+
+/*TODO
+
+fire= tirer depuis la locomotive
+*/
