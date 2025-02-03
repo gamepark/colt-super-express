@@ -13,6 +13,9 @@ export class RoundEndRule extends MaterialRulesPart {
     const players = this.game.players;
     const currentPlayerIndex = players.indexOf(currentPlayer!);
     const nextPlayer = players[(currentPlayerIndex + 1) % players.length];
+    const actionCards = this.material(MaterialType.ActionCard).location(
+      LocationType.ShootingZone
+    );
 
     moves.push(
       firstPlayerCard.moveItem((item) => ({
@@ -21,9 +24,40 @@ export class RoundEndRule extends MaterialRulesPart {
       }))
     );
 
-    const actionCards = this.material(MaterialType.ActionCard).location(
-      LocationType.ShootingZone
-    );
+    const trainCards = this.material(MaterialType.TrainCard).getItems();
+    if (trainCards.length > 1) {
+      const lastTrainCard = this.material(MaterialType.TrainCard).location(
+        (l) => l.x === trainCards.length
+      );
+      if (
+        this.material(MaterialType.BanditFigure).location(
+          (l) => l.parent === lastTrainCard.getItem()?.location.x! - 1
+        ).length >= 1
+      ) {
+        const actionsCardToDelete = this.material(MaterialType.ActionCard)
+          .filter(
+            (card) =>
+              card.location.player ===
+              this.material(MaterialType.BanditFigure)
+                .location(
+                  (l) => l.parent === lastTrainCard.getItem()?.location.x! - 1
+                )
+                .getItem()?.id
+        ).deleteItems()
+
+        moves.push(...actionsCardToDelete);
+             
+        moves.push(
+          this.material(MaterialType.BanditFigure)
+            .location(
+              (l) => l.parent === lastTrainCard.getItem()?.location.x! - 1
+            )
+            .deleteItem()
+        );
+      }
+      moves.push(lastTrainCard.deleteItem());
+    }
+
     moves.push(
       ...actionCards.moveItems((item) => ({
         type: LocationType.PlayerHand,
