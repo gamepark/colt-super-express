@@ -1,3 +1,4 @@
+// verifier si le joueur est éliminé avant une action
 import { MaterialMove, PlayerTurnRule } from "@gamepark/rules-api";
 import { MaterialType } from "../material/MaterialType";
 import { LocationType } from "../material/LocationType";
@@ -56,13 +57,14 @@ export class ShootingRule extends PlayerTurnRule {
       ?.location.rotation.stunned;
   }
 
-  moveAction() {
+  moveAction() {  
+    
     const isBanditStunned = this.isBanditStunned;
     const banditFigure = this.banditFigure;
     const banditFigureId = banditFigure.getItem()?.id;
     const banditLocation = banditFigure.getItem()!.location;
     const banditLocationId = banditFigure.getItem()?.location.id;
-
+// erreur banditLocation.parent n'existe pas
     const trainCardX = this.material(MaterialType.TrainCard).getItem(
       banditLocation.parent!
     ).location.x!;
@@ -470,7 +472,4 @@ export class ShootingRule extends PlayerTurnRule {
   }
 }
 
-/*TODO
 
-fire= tirer depuis la locomotive
-*/

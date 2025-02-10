@@ -34,19 +34,19 @@ export class RoundEndRule extends MaterialRulesPart {
           (l) => l.parent === lastTrainCard.getItem()?.location.x! - 1
         ).length >= 1
       ) {
-        const actionsCardToDelete = this.material(MaterialType.ActionCard)
-          .filter(
-            (card) =>
-              card.location.player ===
-              this.material(MaterialType.BanditFigure)
-                .location(
-                  (l) => l.parent === lastTrainCard.getItem()?.location.x! - 1
-                )
-                .getItem()?.id
-        ).deleteItems()
+        // const actionsCardToDelete = this.material(MaterialType.ActionCard)
+        //   .filter(
+        //     (card) =>
+        //       card.location.player ===
+        //       this.material(MaterialType.BanditFigure)
+        //         .location(
+        //           (l) => l.parent === lastTrainCard.getItem()?.location.x! - 1
+        //         )
+        //         .getItem()?.id
+        //   ).deleteItems()
 
-        moves.push(...actionsCardToDelete);
-             
+        // moves.push(...actionsCardToDelete);
+
         moves.push(
           this.material(MaterialType.BanditFigure)
             .location(
@@ -57,7 +57,7 @@ export class RoundEndRule extends MaterialRulesPart {
       }
       moves.push(lastTrainCard.deleteItem());
     }
-
+// problème déplacer un objet qui n'éxiste plus, retirer les cartes delete
     moves.push(
       ...actionCards.moveItems((item) => ({
         type: LocationType.PlayerHand,
