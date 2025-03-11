@@ -55,7 +55,7 @@ export class ColtSuperExpressSetup extends MaterialGameSetup<
             type: LocationType.PlayerHand,
             player,
           },
-        }))
+        })),
       );
     }
   }

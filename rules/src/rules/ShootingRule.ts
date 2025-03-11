@@ -1,5 +1,5 @@
 // verifier si le joueur est éliminé avant une action
-import { MaterialMove, PlayerTurnRule } from "@gamepark/rules-api";
+import { PlayerTurnRule } from "@gamepark/rules-api";
 import { MaterialType } from "../material/MaterialType";
 import { LocationType } from "../material/LocationType";
 import { ActionCardId, getAction } from "../material/ActionCard";
@@ -10,7 +10,7 @@ import { WagonFloor } from "../material/WagonFloor";
 export class ShootingRule extends PlayerTurnRule {
   onRuleStart() {
     const actions = this.material(MaterialType.ActionCard).location(
-      LocationType.ActionZone
+      LocationType.ActionZone,
     );
     if (actions.length === 0) {
       return [this.startRule(RuleId.RoundEnd)];
@@ -32,7 +32,8 @@ export class ShootingRule extends PlayerTurnRule {
     ];
   }
 
-  clearPlayerMaterials(playerId: number) {
+  /*  clearPlayerMaterials(playerId: number) {
+    console.log("tu es mort");
     const moves: MaterialMove[] = [];
 
     const actionCardsDelete = this.material(MaterialType.ActionCard)
@@ -46,27 +47,57 @@ export class ShootingRule extends PlayerTurnRule {
     moves.push(banditFiguredelete);
 
     return moves;
+  }*/
+
+  clearPlayerMaterials(playerId: number) {
+    console.log("tu es mort");
+    return this.material(MaterialType.ActionCard)
+      .filter((card) => card.location.player === playerId)
+      .deleteItems()
+      .concat(
+        this.material(MaterialType.BanditFigure)
+          .filter((item) => item.id === playerId)
+          .deleteItem(),
+      );
   }
 
   get banditFigure() {
     return this.material(MaterialType.BanditFigure).id(this.player);
   }
 
-  get isBanditStunned() {
+  /*  get isBanditStunned() {
     return this.material(MaterialType.BanditFigure).id(this.player).getItem()
       ?.location.rotation.stunned;
+  }*/
+
+  get isBanditStunned() {
+    return this.banditFigure.getItem()?.location.rotation.stunned;
   }
 
-  moveAction() {  
-    
+  /*  get isBanditAlive() {
+    return (
+      this.material(MaterialType.BanditFigure).id(this.player).getItem() !==
+      undefined
+    );
+  }*/
+
+  get isBanditAlive() {
+    return this.banditFigure.getItem() !== undefined;
+  }
+
+  moveAction() {
+    if (!this.isBanditAlive) {
+      console.log("Le bandit est éliminé, action annulée.");
+      return [];
+    }
     const isBanditStunned = this.isBanditStunned;
     const banditFigure = this.banditFigure;
     const banditFigureId = banditFigure.getItem()?.id;
     const banditLocation = banditFigure.getItem()!.location;
     const banditLocationId = banditFigure.getItem()?.location.id;
-// erreur banditLocation.parent n'existe pas
+    // erreur banditLocation.parent n'existe pas
     const trainCardX = this.material(MaterialType.TrainCard).getItem(
-      banditLocation.parent!
+      banditLocation.parent!,
     ).location.x!;
     const nextTrainCardX = banditLocation.rotation.facingLocomotive
       ? trainCardX - 1
@@ -80,13 +111,13 @@ export class ShootingRule extends PlayerTurnRule {
         banditLocation.parent === undefined &&
         banditLocation.rotation.facingLocomotive
       ) {
+        console.log("move-dead-1");
         return this.clearPlayerMaterials(banditFigureId);
       } else if (
         nextTrainCard.getIndex() === -1 &&
         banditFigure.getItem()?.location.parent !==
           this.material(MaterialType.TrainCard).length - 1
       ) {
-
         return [
           banditFigure.moveItem({
             id: banditLocationId,
@@ -100,7 +131,6 @@ export class ShootingRule extends PlayerTurnRule {
         banditFigure.getItem()?.location.parent === undefined &&
         !banditLocation.rotation.facingLocomotive
       ) {
-
         return [
           banditFigure.moveItem({
             id: banditLocationId,
@@ -115,6 +145,7 @@ export class ShootingRule extends PlayerTurnRule {
         banditFigure.getItem()?.location.parent ===
           this.material(MaterialType.TrainCard).length - 1
       ) {
+        console.log("move-death-2");
         return this.clearPlayerMaterials(banditFigureId);
       } else {
         return [
@@ -141,6 +172,10 @@ export class ShootingRule extends PlayerTurnRule {
   }
 
   flipAction() {
+    if (!this.isBanditAlive) {
+      console.log("Le bandit est éliminé, action annulée.");
+      return [];
+    }
     const banditFigure = this.banditFigure;
     const isBanditStunned = this.isBanditStunned;
 
@@ -168,6 +203,10 @@ export class ShootingRule extends PlayerTurnRule {
   }
 
   changeFloorAction() {
+    if (!this.isBanditAlive) {
+      console.log("Le bandit est éliminé, action annulée.");
+      return [];
+    }
     const isBanditStunned = this.isBanditStunned;
     const banditFigure = this.banditFigure;
     const banditLocationId = banditFigure.getItem()?.location.id;
@@ -201,7 +240,7 @@ export class ShootingRule extends PlayerTurnRule {
     const banditFigure = this.banditFigure;
     const banditLocation = banditFigure.getItem()!.location;
     const trainCard = this.material(MaterialType.TrainCard).getItem(
-      banditLocation.parent!
+      banditLocation.parent!,
     ).location.x!;
     const maxWagonX = this.material(MaterialType.TrainCard).getItems().length;
 
@@ -211,13 +250,13 @@ export class ShootingRule extends PlayerTurnRule {
       .filter(
         (bandit) =>
           !bandit.location.rotation.stunned &&
-          bandit.location.id === banditLocation.id
+          bandit.location.id === banditLocation.id,
       );
 
     // plus ou egal deux bandits sur meme cartes que bandit qui tire
     if (banditsOnSameCardPlayer.length >= 2) {
       const banditsAfterplayer = banditsOnSameCardPlayer.filter(
-        (bandit) => bandit.location.x! > banditLocation.x!
+        (bandit) => bandit.location.x! > banditLocation.x!,
       );
       if (banditsAfterplayer.length > 0) {
         return banditsAfterplayer.minBy((bandit) => bandit.location.x!);
@@ -237,7 +276,7 @@ export class ShootingRule extends PlayerTurnRule {
 
         if (banditsOnLoco.length >= 2) {
           const banditFound = banditsOnLoco.filter(
-            (bandit) => bandit.location.x === banditLocation.x! + 1
+            (bandit) => bandit.location.x === banditLocation.x! + 1,
           );
           if (banditFound) {
             return banditFound;
@@ -258,7 +297,7 @@ export class ShootingRule extends PlayerTurnRule {
         .filter(
           (bandit) =>
             !bandit.location.rotation.stunned &&
-            bandit.location.id === banditLocation.id
+            bandit.location.id === banditLocation.id,
         );
       if (banditsOnNextCard.length > 0) {
         return banditsOnNextCard.minBy((bandit) => bandit.location.x!);
@@ -271,7 +310,7 @@ export class ShootingRule extends PlayerTurnRule {
     const banditFigure = this.banditFigure;
     const banditLocation = banditFigure.getItem()!.location;
     const trainCard = this.material(MaterialType.TrainCard).getItem(
-      banditLocation.parent!
+      banditLocation.parent!,
     ).location.x!;
 
     const banditsOnSameCardPlayer = this.material(MaterialType.BanditFigure)
@@ -280,7 +319,7 @@ export class ShootingRule extends PlayerTurnRule {
       .filter(
         (bandit) =>
           !bandit.location.rotation.stunned &&
-          bandit.location.id === banditLocation.id
+          bandit.location.id === banditLocation.id,
       );
 
     //tu es sur la loco et d'autres bandits sont avec toi et vers le sens de la loco
@@ -292,7 +331,7 @@ export class ShootingRule extends PlayerTurnRule {
       if (banditsOnLoco.getItems().length >= 2) {
         const banditLocationX = banditLocation.x;
         const banditFound = banditsOnLoco.filter(
-          (b) => b.location.x === banditLocationX! - 1
+          (b) => b.location.x === banditLocationX! - 1,
         );
         if (banditFound) {
           return banditFound;
@@ -311,23 +350,21 @@ export class ShootingRule extends PlayerTurnRule {
         .filter(
           (bandit) =>
             !bandit.location.rotation.stunned &&
-            bandit.location.id === banditLocation.id
+            bandit.location.id === banditLocation.id,
         );
       if (banditsOnNextCard.length > 0) {
         return banditsOnNextCard.maxBy((bandit) => bandit.location.x!);
       }
     }
     if (banditsOnSameCardPlayer.length >= 2) {
-
       const banditsAfterplayer = banditsOnSameCardPlayer.filter(
-        (bandit) => bandit.location.x! < banditLocation.x!
+        (bandit) => bandit.location.x! < banditLocation.x!,
       );
       if (banditsAfterplayer.length > 0) {
         return banditsAfterplayer.maxBy((bandit) => bandit.location.x!);
       }
     }
     for (let x = trainCard - 1; x >= 0; x--) {
-
       const nextTrainCardIndex = this.material(MaterialType.TrainCard)
         .location((l) => l.x === x)
         .getIndex();
@@ -337,7 +374,7 @@ export class ShootingRule extends PlayerTurnRule {
         .filter(
           (bandit) =>
             !bandit.location.rotation.stunned &&
-            bandit.location.id === banditLocation.id
+            bandit.location.id === banditLocation.id,
         );
       if (banditsOnNextCard.length > 0) {
         return banditsOnNextCard.maxBy((bandit) => bandit.location.x!);
@@ -347,16 +384,22 @@ export class ShootingRule extends PlayerTurnRule {
   }
 
   fireAction() {
+    console.log(this.material(MaterialType.BanditFigure).getItems());
+    console.log(this.material(MaterialType.TrainCard).getItems());
+    if (!this.isBanditAlive) {
+      console.log("Le bandit est éliminé, action annulée.");
+      return [];
+    }
     const isBanditStunned = this.isBanditStunned;
     const banditFigure = this.banditFigure;
     const banditLocation = banditFigure.getItem()!.location;
     const banditTargetAfter = this.getBanditAfter?.getItem()?.location.parent;
     const banditTargetBefore = this.getBanditBefore?.getItem()?.location.parent;
     const trainCardAfterX = this.material(MaterialType.TrainCard).getItem(
-      banditTargetAfter!
+      banditTargetAfter!,
     ).location.x!;
     const trainCardBeforeX = this.material(MaterialType.TrainCard).getItem(
-      banditTargetBefore!
+      banditTargetBefore!,
     ).location.x!;
     const nextTrainCardX = banditLocation.rotation.facingLocomotive
       ? trainCardBeforeX - 1
@@ -368,16 +411,58 @@ export class ShootingRule extends PlayerTurnRule {
       .filter(
         (bandit) =>
           bandit.location.parent === nextTrainCard.getIndex() &&
-          bandit.location.id === banditLocation.id
+          bandit.location.id === banditLocation.id,
       )
       .getItems().length;
 
     if (!isBanditStunned) {
+      //le bandit qui tire est sur la loco
       if (banditLocation.parent === undefined) {
+        //le bandit qui tire est face à la loco
         if (banditLocation.rotation.facingLocomotive) {
-          return this.clearPlayerMaterials(this.getBanditBefore?.getItem()?.id);
+          //il y a un banditbefore sur la loco qui est tué
+          if (this.getBanditBefore) {
+            console.log("fire-death-1");
+            return this.clearPlayerMaterials(
+              this.getBanditBefore?.getItem()?.id,
+            );
+          }
+          //il n'y a pas de banditBefore
+          else {
+            return [];
+          }
+          //le bandit qui tire est sur la loco et n'est pas face à la locomotive
         } else if (!banditLocation.rotation.facingLocomotive) {
-          return this.clearPlayerMaterials(this.getBanditAfter?.getItem()?.id);
+          //il y a un banditAfter
+          if (this.getBanditAfter) {
+            // le banditAfter est sur la dernière cart wagon, le tuer
+            if (
+              banditTargetAfter! + 1 ===
+              this.material(MaterialType.TrainCard).getItems().length
+            ) {
+              return this.clearPlayerMaterials(
+                this.getBanditAfter?.getItem()?.id,
+              );
+            }
+            // le banditAfter n'est pas sur la dernière carte wagon
+            else {
+              return [
+                this.material(MaterialType.BanditFigure)
+                  .id(this.getBanditAfter.getItem()!.id)
+                  .moveItem((item) => ({
+                    ...item.location,
+                    parent: nextTrainCard.getIndex(),
+                    rotation: {
+                      ...item.location.rotation,
+                      stunned: true,
+                    },
+                    x: 0,
+                  })),
+              ];
+            }
+          } else {
+            return [];
+          }
         }
       } else if (
         banditLocation.rotation.facingLocomotive &&
@@ -385,8 +470,9 @@ export class ShootingRule extends PlayerTurnRule {
       ) {
         if (this.getBanditBefore) {
           if (this.getBanditBefore.getItem()?.location.parent === undefined) {
+            console.log("fire-death-3");
             return this.clearPlayerMaterials(
-              this.getBanditBefore!.getItem()?.id
+              this.getBanditBefore!.getItem()?.id,
             );
           } else if (nextTrainCard.getIndex() === -1) {
             return [
@@ -471,5 +557,3 @@ export class ShootingRule extends PlayerTurnRule {
     return [];
   }
 }
-
-
